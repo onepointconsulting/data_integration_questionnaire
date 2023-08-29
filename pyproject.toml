@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "data-integration-questionnaire"
+version = "0.1.0"
+description = "Reverse chatbot to help users to find a data integration strategy"
+authors = ["Gil Fernandes <gil.fernandes@onepointltd.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+openai = "^0.27.9"
+langchain = "^0.0.274"
+chainlit = "^0.6.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
