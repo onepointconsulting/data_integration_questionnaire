@@ -63,6 +63,24 @@ Enabler: Having a unified platform simplifies maintainability of the integration
 
 """
 
+CLASSIFICATION_QUESTIONNAIRE_SYSTEM_MESSAGE = "You are an expert data integration and gouvernance expert that can classify customers according to their quizz answers"
+CLASSIFICATION_TEMPLATE_HUMAN_MESSAGE = f"""Please classify a customer according to the answers of the questionnaire. 
+The questionnnaire starts with {QUESTIONNAIRE_START} and ends with {QUESTIONNAIRE_END}.
+
+{QUESTIONNAIRE_START}
+{{questionnaire}}
+{QUESTIONNAIRE_END}
+
+If the replies to the customer indicate a great level of confidence, you can classify this customer as "Advanced".
+
+For example if the customer answers this question 'Does your organization support an event driven architecture for data integration?' positively,
+the customer cannot be a 'Beginner'
+
+If the customer answers this question here positively: 'Does your organization export data lineage to data catalog?',
+the customer has is at least a 'Professional'
+
+"""
+
 
 class AdviceProfile(BaseModel):
     """Contains the information on how a candidate matched the profile."""
@@ -71,6 +89,16 @@ class AdviceProfile(BaseModel):
         ...,
         description="The list of advices given based on best practices.",
     )
+
+class DataIntegrationClassificationProfile(BaseModel):
+    """Gives a classification to a customer based on his answers"""
+
+    classification: List[str] = Field(
+        ...,
+        description="The classification of the customer on his journey base on the answers to a quizz",
+        enum=["Beginner", "Intermediate", "Professional", "Advanced", "Expert"]
+    )
+
 
 
 def prompt_factory() -> ChatPromptTemplate:
@@ -81,11 +109,28 @@ def prompt_factory() -> ChatPromptTemplate:
     return ChatPromptTemplate(messages=prompt_msgs)
 
 
+def prompt_factory_classification() -> ChatPromptTemplate:
+    prompt_msgs = [
+        SystemMessage(content=CLASSIFICATION_QUESTIONNAIRE_SYSTEM_MESSAGE),
+        HumanMessagePromptTemplate.from_template(CLASSIFICATION_TEMPLATE_HUMAN_MESSAGE),
+    ]
+    return ChatPromptTemplate(messages=prompt_msgs)
+
+
 def create_match_profile_chain_pydantic() -> LLMChain:
     return create_structured_output_chain(
         AdviceProfile,
         cfg.llm,
         prompt_factory(),
+        verbose=cfg.verbose_llm,
+    )
+
+
+def create_classification_profile_chain_pydantic() -> LLMChain:
+    return create_structured_output_chain(
+        DataIntegrationClassificationProfile,
+        cfg.llm,
+        prompt_factory_classification(),
         verbose=cfg.verbose_llm,
     )
 
