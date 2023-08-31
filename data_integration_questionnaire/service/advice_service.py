@@ -14,15 +14,7 @@ QUESTIONNAIRE_SYSTEM_MESSAGE = "You are an expert data integration and gouvernan
 QUESTIONNAIRE_START = "=== 'QUESTIONNAIRE START' ==="
 QUESTIONNAIRE_END = "=== 'QUESTIONNAIRE END' ==="
 
-HUMAN_MESSAGE = f"""Please give a customer some advice to improve the data integration based on the answers to the questionnaire. 
-The questionnnaire starts with {QUESTIONNAIRE_START} and ends with {QUESTIONNAIRE_END}.
-
-{QUESTIONNAIRE_START}
-{{questionnaire}}
-{QUESTIONNAIRE_END}
-
-Here are some best practices that you can mention in your answer depending on the results of the questionnaire:
-
+BEST_PRACTICES = """
 1. No code/ Low Code
 Capability: There are more and more tools that are emerging in market making it easier to do data integration between systems without writing any code and use out of box connectors. 
 The vast array of connectors gives organization agility to integrate with systems. 
@@ -61,6 +53,24 @@ Organizations have multiple tools for data integration where ETL us used for bul
 
 Enabler: Having a unified platform simplifies maintainability of the integration platform.
 
+Unified Data Integration- Why the Whole is Greater Than the Sum
+Top companies now recognize the need for a more unified integration approach that combines the right technologies and managed services to deliver a more consistent and reliable view of their data across disparate applications, ultimately driving measurable business results.
+Today’s enterprise data environments can be a goldmine of insight or a quagmire of confusion depending on the company and their approach to data integration and data management. 
+Many struggle to manage a complex web of cloud applications — ironically designed to alleviate the very problems they now face with data accessibility and timeliness of delivery.
+"""
+
+HUMAN_MESSAGE = f"""Please give a customer some advice to improve the data integration based on the answers to the questionnaire. 
+The questionnnaire starts with {QUESTIONNAIRE_START} and ends with {QUESTIONNAIRE_END}.
+
+{QUESTIONNAIRE_START}
+{{questionnaire}}
+{QUESTIONNAIRE_END}
+
+Here are some best practices that you can mention in your answer depending on the results of the questionnaire:
+
+{BEST_PRACTICES}
+
+
 """
 
 CLASSIFICATION_QUESTIONNAIRE_SYSTEM_MESSAGE = "You are an expert data integration and gouvernance expert that can classify customers according to their quizz answers"
@@ -71,13 +81,13 @@ The questionnnaire starts with {QUESTIONNAIRE_START} and ends with {QUESTIONNAIR
 {{questionnaire}}
 {QUESTIONNAIRE_END}
 
-If the replies to the customer indicate a great level of confidence, you can classify this customer as "Advanced".
+If the replies of the customer indicate a great level of confidence, you can classify this customer as "Advanced".
 
 For example if the customer answers this question 'Does your organization support an event driven architecture for data integration?' positively,
 the customer cannot be a 'Beginner'
 
 If the customer answers this question here positively: 'Does your organization export data lineage to data catalog?',
-the customer has is at least a 'Professional'
+the customer has at least a 'Professional' level.
 
 """
 
