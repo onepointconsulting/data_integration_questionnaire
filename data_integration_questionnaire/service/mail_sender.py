@@ -40,7 +40,7 @@ Subject: {quizz_title}
         logger.info("login_res %s", login_res)
         logger.info("Message: %s", message)
         send_mail_res = server.sendmail(
-            mail_config.mail_from, "gil.fernandes@gmail.com", message
+            mail_config.mail_from, target_email, message
         )
         logger.info("send_mail_res %s", send_mail_res)
         server.quit()
