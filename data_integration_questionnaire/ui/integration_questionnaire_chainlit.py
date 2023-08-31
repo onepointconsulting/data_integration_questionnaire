@@ -124,5 +124,5 @@ For more information, please visit our <a href="https://onepointltd.com">webpage
         logger.warn("%s is not a valid email", response_content)
         await cl.ErrorMessage(
             content=f"Sorry, '{response_content}' does not seem to be an email address"
-        )
+        ).send()
     await cl.Message(content=f"The quizz is complete. Please press the 'New Chat' button to restart.").send()
