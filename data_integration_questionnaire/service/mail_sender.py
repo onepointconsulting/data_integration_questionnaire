@@ -5,10 +5,14 @@ from data_integration_questionnaire.log_init import logger
 
 from email.utils import parseaddr
 
+import re
+
+EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
 def validate_address(target_email: str):
-    res = parseaddr("foo@example.com")
-    return len(res[1]) > 0
+    logger.info("Checking if %s is an email", target_email)
+    res = parseaddr(target_email)
+    return len(res[1]) > 0 and EMAIL_REGEX.match(target_email)
 
 
 def send_email(
@@ -22,13 +26,7 @@ MIME-Version: 1.0
 Content-type: text/html
 Subject: {quizz_title}
 
-Thank you for submitting the questionnaire.
-
-<h2>Advice:</h2>
-
-<pre>
 {questionnaire_summary}
-</pre>
 
 """
     # Send the message via local SMTP server.
@@ -56,8 +54,11 @@ if __name__ == "__main__":
         recipient,
         "Onepoint Data Integration Quizz",
         """
+<h2>Advice</h2>
+<pre>
 1. Please do this.
 2. Please do that.
+</pre>
 """,
     )
     
