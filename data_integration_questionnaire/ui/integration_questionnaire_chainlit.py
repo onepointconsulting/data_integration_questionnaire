@@ -57,9 +57,9 @@ async def init():
     This application will ask you questions about your data integration strategy and at the end give you some evaluation.
     """
     initial_message = f"""
-# Data Integration Quizz
-{display_image('imagesmonitor-1307227_600.webp', 'Data Integration Questionnaire', 'Data Integration Quizz')}
-Welcome to the **Onepoints's data integration** quizz
+# Data Integration Questionnaire
+{display_image('imagesmonitor-1307227_600.webp', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
+Welcome to the **Onepoints's data integration** questionnaire
 """
     await cl.Avatar(
         name=AVATAR["CHATBOT"],
@@ -173,7 +173,7 @@ async def process_send_email(questionnaire: Questionnaire, advice_markdown: str)
         await asyncify(send_email)(
             "Dear customer",
             response_content,
-            "Onepoint Data Integration Quizz",
+            "Onepoint Data Integration Questionnaire",
             f"""
 <p>Big thank you for completing the <b>Onepoint's Data Integration Assessment Quiz</b>.</p>
 
@@ -202,6 +202,6 @@ For more information, please visit our <a href="https://onepointltd.com">webpage
             author=AVATAR["CHATBOT"],
         ).send()
     await cl.Message(
-        content=f"The quizz is complete. Please press the 'New Chat' button to restart.",
+        content=f"The questionnaire is complete. Please press the 'New Chat' button to restart.",
         author=AVATAR["CHATBOT"],
     ).send()

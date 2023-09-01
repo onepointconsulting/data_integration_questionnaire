@@ -52,7 +52,7 @@ if __name__ == "__main__":
     send_email(
         "Gil Fernandeds",
         recipient,
-        "Onepoint Data Integration Quizz",
+        "Onepoint Data Integration Questionnaire",
         """
 <h2>Advice</h2>
 <pre>
