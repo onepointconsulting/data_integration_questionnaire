@@ -1,20 +1,12 @@
-from typing import List
+[general_messages]
 
-from pydantic import BaseModel, Field
+tip_correct_format = "Tip: Make sure to answer in the correct format"
 
-from langchain.schema import SystemMessage
-from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
-from langchain.chains.openai_functions import create_structured_output_chain
-from langchain import LLMChain
+[data_integration_questionnaire_generator]
 
-from data_integration_questionnaire.config import cfg
-from data_integration_questionnaire.log_init import logger
-
-QUESTIONNAIRE_SYSTEM_MESSAGE = "You are an expert data integration and gouvernance expert that can give advice based on a questionnaire"
-QUESTIONNAIRE_START = "=== 'QUESTIONNAIRE START' ==="
-QUESTIONNAIRE_END = "=== 'QUESTIONNAIRE END' ==="
-
-BEST_PRACTICES = """
+system_message = "You are an expert data integration and gouvernance expert that can ask questions about data integration and gouvernance best practices"
+# Change for different best practices
+best_practices = """
 1. No code/ Low Code
 Capability: There are more and more tools that are emerging in market making it easier to do data integration between systems without writing any code and use out of box connectors. 
 The vast array of connectors gives organization agility to integrate with systems. 
@@ -59,95 +51,11 @@ Today’s enterprise data environments can be a goldmine of insight or a quagmir
 Many struggle to manage a complex web of cloud applications — ironically designed to alleviate the very problems they now face with data accessibility and timeliness of delivery.
 """
 
-HUMAN_MESSAGE = f"""Please give a customer some advice to improve the data integration based on the answers to the questionnaire. 
-The questionnnaire starts with {QUESTIONNAIRE_START} and ends with {QUESTIONNAIRE_END}.
+human_message = """Based on the best practices specified below, please generate 3 questions to help a customer on his journey to enforce these best practices.
+The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
 
-{QUESTIONNAIRE_START}
-{{questionnaire}}
-{QUESTIONNAIRE_END}
-
-Here are some best practices that you can mention in your answer depending on the results of the questionnaire:
-
-{BEST_PRACTICES}
+==== BEST PRACTICES START ====
+{best_practices}
+==== BEST PRACTICES END ====
 """
-
-CLASSIFICATION_QUESTIONNAIRE_SYSTEM_MESSAGE = "You are an expert data integration and gouvernance expert that can classify customers according to their quizz answers"
-CLASSIFICATION_TEMPLATE_HUMAN_MESSAGE = f"""Please classify a customer according to the answers of the questionnaire. 
-The questionnnaire starts with {QUESTIONNAIRE_START} and ends with {QUESTIONNAIRE_END}.
-
-{QUESTIONNAIRE_START}
-{{questionnaire}}
-{QUESTIONNAIRE_END}
-
-If the replies of the customer indicate a great level of confidence, you can classify this customer as "Advanced".
-
-For example if the customer answers this question 'Does your organization support an event driven architecture for data integration?' positively,
-the customer cannot be a 'Beginner'
-
-If the customer answers this question here positively: 'Does your organization export data lineage to data catalog?',
-the customer has at least a 'Professional' level.
-
-"""
-
-
-class AdviceProfile(BaseModel):
-    """Contains the information on how a candidate matched the profile."""
-
-    advices: List[str] = Field(
-        ...,
-        description="The list of advices given based on best practices.",
-    )
-
-class DataIntegrationClassificationProfile(BaseModel):
-    """Gives a classification to a customer based on his answers"""
-
-    classification: List[str] = Field(
-        ...,
-        description="The classification of the customer on his journey base on the answers to a quizz",
-        enum=["Beginner", "Intermediate", "Professional", "Advanced", "Expert"]
-    )
-
-
-
-def prompt_factory() -> ChatPromptTemplate:
-    prompt_msgs = [
-        SystemMessage(content=QUESTIONNAIRE_SYSTEM_MESSAGE),
-        HumanMessagePromptTemplate.from_template(HUMAN_MESSAGE),
-    ]
-    return ChatPromptTemplate(messages=prompt_msgs)
-
-
-def prompt_factory_classification() -> ChatPromptTemplate:
-    prompt_msgs = [
-        SystemMessage(content=CLASSIFICATION_QUESTIONNAIRE_SYSTEM_MESSAGE),
-        HumanMessagePromptTemplate.from_template(CLASSIFICATION_TEMPLATE_HUMAN_MESSAGE),
-    ]
-    return ChatPromptTemplate(messages=prompt_msgs)
-
-
-def create_match_profile_chain_pydantic() -> LLMChain:
-    return create_structured_output_chain(
-        AdviceProfile,
-        cfg.llm,
-        prompt_factory(),
-        verbose=cfg.verbose_llm,
-    )
-
-
-def create_classification_profile_chain_pydantic() -> LLMChain:
-    return create_structured_output_chain(
-        DataIntegrationClassificationProfile,
-        cfg.llm,
-        prompt_factory_classification(),
-        verbose=cfg.verbose_llm,
-    )
-
-
-def create_input_dict(questionnaire: str) -> dict:
-    return {"questionnaire": questionnaire}
-
-
-def extract_advices(chain_res: AdviceProfile) -> List[str]:
-    return chain_res.advices
-
 

@@ -1,7 +1,9 @@
-from langchain.chat_models import ChatOpenAI
+from pathlib import Path
 import os
 
 from dotenv import load_dotenv
+
+from langchain.chat_models import ChatOpenAI
 
 load_dotenv()
 
@@ -19,8 +21,9 @@ class Config:
         streaming=True
     )
     verbose_llm = os.getenv("VERBOSE_LLM") == "true"
-
     ui_timeout = int(os.getenv("UI_TIMEOUT"))
+    project_root = Path(os.getenv("PROJECT_ROOT"))
+    assert project_root.exists()
 
 cfg = Config()
 
@@ -36,5 +39,4 @@ mail_config = MailConfig()
 if __name__ == "__main__":
     logger.info("Model: %s", cfg.model)
     logger.info("Verbose: %s", cfg.verbose_llm)
-
     logger.info("mail_config user: %s", mail_config.mail_user)
