@@ -12,6 +12,7 @@ langchain = "^0.0.274"
 chainlit = "^0.6.3"
 pytest = "^7.4.0"
 tomli = "^2.0.1"
+cachetools = "^5.3.1"
 
 
 [build-system]

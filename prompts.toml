@@ -1,10 +1,9 @@
 [general_messages]
-
 tip_correct_format = "Tip: Make sure to answer in the correct format"
 
 [data_integration_questionnaire_generator]
 
-system_message = "You are an expert data integration and gouvernance expert that can ask questions about data integration and gouvernance best practices"
+system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance best practices"
 # Change for different best practices
 best_practices = """
 1. No code/ Low Code
@@ -59,3 +58,33 @@ The best practices section starts with ==== BEST PRACTICES START ==== and ends w
 ==== BEST PRACTICES END ====
 """
 
+[data_integration_secondary_questionnaire_generator]
+system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance best practices based on a pre-filled questionnaire"
+human_message = """Based on the best practices specified amd on a pre-filled questionnaire by a customer that you can find below, please generate 3 questions to help the customer on his journey to enforce these best practices.
+The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
+The pre-filled questionnaire starts with ==== CUSTOMER QUESTIONNAIRE START ==== and ends with ==== CUSTOMER QUESTIONNAIRE END ====.
+
+==== BEST PRACTICES START ====
+{best_practices}
+==== BEST PRACTICES END ====
+
+==== CUSTOMER QUESTIONNAIRE START ====
+{customer_questionnaire}
+==== CUSTOMER QUESTIONNAIRE END ====
+"""
+
+[data_integration_advice_generator]
+system_message = "You are a data integration and gouvernance expert that gives advice about data integration and gouvernance based on the output of a questionnaire and a set of data integration and gouvernance best practices"
+human_message = """Based on the best practices specified amd on a pre-filled questionnaire by a customer that you can find below, please generate a list of advices to help the customer on his journey to enforce these best practices.
+The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
+The pre-filled questionnaire starts with ==== CUSTOMER QUESTIONNAIRE START ==== and ends with ==== CUSTOMER QUESTIONNAIRE END ====.
+
+==== BEST PRACTICES START ====
+{best_practices}
+==== BEST PRACTICES END ====
+
+==== CUSTOMER QUESTIONNAIRE START ====
+{customer_questionnaire}
+{secondary_questionnaire}
+==== CUSTOMER QUESTIONNAIRE END ====
+"""

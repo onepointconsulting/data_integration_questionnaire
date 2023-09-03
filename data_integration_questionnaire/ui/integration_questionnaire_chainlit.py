@@ -19,6 +19,7 @@ from data_integration_questionnaire.service.advice_service import (
     create_match_profile_chain_pydantic,
     extract_advices,
 )
+from data_integration_questionnaire.service.dynamic_quizz_service import BestPracticesAdvices, BestPracticesQuestions, chain_factory_advices, chain_factory_secondary_questionnaire, convert_qa_to_string, execute_initial_questions_chain, get_best_practices
 from data_integration_questionnaire.service.mail_sender import (
     send_email,
     validate_address,
@@ -61,6 +62,25 @@ async def init():
 {display_image('imagesmonitor-1307227_600.webp', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
 Welcome to the **Onepoints's data integration** questionnaire
 """
+    await setup_avatar()
+    await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
+    generated_questions = await asyncify(execute_initial_questions_chain)()
+    questionnaire: Questionnaire = await questionnaire_factory(generated_questions)
+    await loop_questions(questionnaire)
+    await process_secondary_questionnaire(questionnaire)
+
+
+async def loop_questions(questionnaire):
+    for question_answer in questionnaire.questions:
+        response = await cl.AskUserMessage(
+            content=question_message_factory(question_answer),
+            timeout=cfg.ui_timeout,
+            author=AVATAR["CHATBOT"],
+        ).send()
+        question_answer.answer = response
+
+
+async def setup_avatar():
     await cl.Avatar(
         name=AVATAR["CHATBOT"],
         url="https://avatars.githubusercontent.com/u/128686189?s=400&u=a1d1553023f8ea0921fba0debbe92a8c5f840dd9&v=4",
@@ -69,24 +89,37 @@ Welcome to the **Onepoints's data integration** questionnaire
         name=AVATAR["USER"],
         url="/public/images/blank-profile-picture-973460_300.webp",
     ).send()
-    await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
-    questionnaire: Questionnaire = questionnaire_factory()
-    for question_answer in questionnaire.questions:
-        response = await cl.AskUserMessage(
-            content=question_message_factory(question_answer),
-            timeout=cfg.ui_timeout,
-            author=AVATAR["CHATBOT"],
-        ).send()
-        question_answer.answer = response
-    await process_questionnaire(questionnaire)
 
 
-async def process_questionnaire(questionnaire: Questionnaire):
-    chain = create_match_profile_chain_pydantic()
-    # await chain.acall(str(questionnaire), callbacks=[cl.AsyncLangchainCallbackHandler()])
-    quizz_input = create_input_dict(str(questionnaire))
-    res = await chain.arun(quizz_input)
-    advices = extract_advices(res)
+async def process_secondary_questionnaire(questionnaire: Questionnaire):
+
+    customer_questionnaire: str = questionnaire.convert_to_string()
+    best_practices = get_best_practices()
+    secondary_chain = chain_factory_secondary_questionnaire()
+    secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
+        {
+            "best_practices": best_practices,
+            "customer_questionnaire": customer_questionnaire,
+        }
+    )
+    logger.info("secondary_questions: %s", secondary_questions)
+    second_questionnaire: Questionnaire = await questionnaire_factory(secondary_questions.questions)
+    await loop_questions(second_questionnaire)
+
+    second_customer_questionnaire: str = second_questionnaire.convert_to_string()
+    advice_chain = chain_factory_advices()
+    advices: BestPracticesAdvices = await advice_chain.arun(
+        {
+            "best_practices": best_practices,
+            "customer_questionnaire": customer_questionnaire,
+            "secondary_questionnaire": second_customer_questionnaire,
+        }
+    )
+    
+    await display_advices(advices)
+
+async def display_advices(advices: BestPracticesAdvices):
+    advices = advices.advices
     advice_amount = len(advices)
     if advice_amount > 0:
         pieces = "piece" if advice_amount == 1 else "pieces"
@@ -99,8 +132,7 @@ async def process_questionnaire(questionnaire: Questionnaire):
         cl.user_session.set("task_list", task_list)
         actions: List[cl.Action] = create_advice_task_actions(advices)
         await cl.Message(
-            content="\n- " + advice_markdown, author=AVATAR["CHATBOT"],
-            actions=actions
+            content="\n- " + advice_markdown, author=AVATAR["CHATBOT"], actions=actions
         ).send()
 
     else:
@@ -109,7 +141,7 @@ async def process_questionnaire(questionnaire: Questionnaire):
             author=AVATAR["CHATBOT"],
         ).send()
 
-    await process_classification(questionnaire, quizz_input, advice_markdown)
+    # await process_classification(questionnaire, quizz_input, advice_markdown)
 
 
 def create_advice_task_actions(advices: List[str]) -> List[cl.Action]:
@@ -130,7 +162,7 @@ def create_advice_task_actions(advices: List[str]) -> List[cl.Action]:
 @cl.action_callback("task_button")
 async def on_action(action):
     task_list: cl.TaskList = cl.user_session.get("task_list")
-    task_number = int(re.sub(r'.+?(\d+)', r'\1', action.label)) - 1
+    task_number = int(re.sub(r".+?(\d+)", r"\1", action.label)) - 1
     task: cl.Task = task_list.tasks[task_number]
     task.status = cl.TaskStatus.DONE
     await task_list.send()

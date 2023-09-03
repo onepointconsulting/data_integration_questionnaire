@@ -1,5 +1,9 @@
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
+
+from data_integration_questionnaire.service.dynamic_quizz_service import (
+    convert_qa_to_string,
+)
 
 
 @dataclass
@@ -23,6 +27,15 @@ class Questionnaire:
 {render_answer(q.answer)}
 """
         return res
+
+    def convert_to_arrays(self) -> Tuple[List[str], List[str]]:
+        questions = [q.question for q in self.questions]
+        answers = [q.answer for q in self.questions]
+        return questions, answers
+
+    def convert_to_string(self) -> str:
+        questions, answers = self.convert_to_arrays()
+        return convert_qa_to_string(questions, answers)
 
 
 def render_answer(answer: Union[str, dict]) -> str:

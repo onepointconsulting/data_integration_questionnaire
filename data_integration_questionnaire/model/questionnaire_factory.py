@@ -1,30 +1,15 @@
+from typing import List
+
 from data_integration_questionnaire.model.questionnaire import (
     QuestionAnswer,
     Questionnaire,
 )
+from data_integration_questionnaire.service.dynamic_quizz_service import execute_initial_questions_chain
 
 
-def questionnaire_factory() -> Questionnaire:
+async def questionnaire_factory(generated_questions: List[str]) -> Questionnaire:
     question_answers = []
-    questions = [
-        {
-            "text": "Does your organization support an event driven architecture for data integration?"
-        },
-        {
-            "text": "Does your organization take more than 3 weeks for data integration between 2 systems?"
-        },
-        {
-            "text": "Would you like to know more about capabilities that would cut down your integration cost and time spend for integration by 50%?"
-        },
-        {"text": "Does your organization export data lineage to data catalog?"},
-        {"text": "How many integration engineers does your team have?"},
-        {
-            "text": "What is the scope of integration? What is the total count of source systems? What is the total count of the destination systems?"
-        },
-        {
-            "text": "Does your organization promote use of open source for data integration?"
-        },
-    ]
+    questions = [{'text': q} for q in generated_questions]
     for q in questions:
         question_answer = QuestionAnswer(question=q["text"], answer="", image=None, image_alt=None, image_title=None)
         if 'image_path' in q and 'image_alt' in q and 'image_title' in q:

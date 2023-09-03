@@ -24,6 +24,10 @@ class Config:
     ui_timeout = int(os.getenv("UI_TIMEOUT"))
     project_root = Path(os.getenv("PROJECT_ROOT"))
     assert project_root.exists()
+    question_cache_folder = os.getenv("QUESTION_CACHE_FOLDER")
+    question_cache_folder_path = Path(question_cache_folder)
+    if not question_cache_folder_path.exists():
+        question_cache_folder_path.mkdir(parents=True, exist_ok=True)
 
 cfg = Config()
 
