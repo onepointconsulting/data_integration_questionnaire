@@ -37,6 +37,13 @@ class BestPracticesAdvices(BaseModel):
         description="The list of advices given used to enforce best practices.",
     )
 
+    def to_html(self) -> str:
+        html = "<ul>"
+        for advice in self.advices:
+            html += f"<li>{advice}</li>"
+        html += "</ul>"
+        return html
+
 
 def prompt_factory_best_practices() -> ChatPromptTemplate:
     section = prompts["data_integration_questionnaire_generator"]

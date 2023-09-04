@@ -117,9 +117,9 @@ async def process_secondary_questionnaire(questionnaire: Questionnaire):
         }
     )
     
-    advice_markdown = await display_advices(advices)
+    await display_advices(advices)
     merged_questionnaire = merge_questionnaires([questionnaire, second_questionnaire])
-    await process_send_email(merged_questionnaire, advice_markdown)
+    await process_send_email(merged_questionnaire, advices)
 
 
 async def display_advices(advices: BestPracticesAdvices) -> Optional[str]:
@@ -198,7 +198,7 @@ async def create_task_list(advices: List[str]) -> cl.TaskList:
     return task_list
 
 
-async def process_send_email(questionnaire: Questionnaire, advice_markdown: str):
+async def process_send_email(questionnaire: Questionnaire, advices: BestPracticesAdvices):
     response = await cl.AskUserMessage(
         content="Would you like to receive an email with the recommendations? If so please write your email in the chat.",
         timeout=cfg.ui_timeout,
@@ -218,9 +218,7 @@ async def process_send_email(questionnaire: Questionnaire, advice_markdown: str)
 {questionnaire.convert_to_html()}
 
 <h2>Advice</h2>
-<pre>
-{advice_markdown}
-</pre>
+{advices.to_html()}
 
 For more information, please visit our <a href="https://onepointltd.com">webpage</a>.
 
