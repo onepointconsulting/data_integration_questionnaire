@@ -1,5 +1,5 @@
 import re
-from typing import List
+from typing import List, Optional
 
 import chainlit as cl
 
@@ -9,6 +9,7 @@ from data_integration_questionnaire.config import cfg
 from data_integration_questionnaire.model.questionnaire import (
     QuestionAnswer,
     Questionnaire,
+    merge_questionnaires,
 )
 from data_integration_questionnaire.model.questionnaire_factory import (
     questionnaire_factory,
@@ -116,9 +117,12 @@ async def process_secondary_questionnaire(questionnaire: Questionnaire):
         }
     )
     
-    await display_advices(advices)
+    advice_markdown = await display_advices(advices)
+    merged_questionnaire = merge_questionnaires([questionnaire, second_questionnaire])
+    await process_send_email(merged_questionnaire, advice_markdown)
 
-async def display_advices(advices: BestPracticesAdvices):
+
+async def display_advices(advices: BestPracticesAdvices) -> Optional[str]:
     advices = advices.advices
     advice_amount = len(advices)
     if advice_amount > 0:
@@ -134,12 +138,13 @@ async def display_advices(advices: BestPracticesAdvices):
         await cl.Message(
             content="\n- " + advice_markdown, author=AVATAR["CHATBOT"], actions=actions
         ).send()
-
+        return advice_markdown
     else:
         await cl.Message(
             content="You are doing great. We have no advice for you right now.",
             author=AVATAR["CHATBOT"],
         ).send()
+        return None
 
     # await process_classification(questionnaire, quizz_input, advice_markdown)
 
@@ -210,9 +215,7 @@ async def process_send_email(questionnaire: Questionnaire, advice_markdown: str)
 <p>Big thank you for completing the <b>Onepoint's Data Integration Assessment Quiz</b>.</p>
 
 <h2>Questionnaire</h2>
-<pre>
-{questionnaire}
-</pre>
+{questionnaire.convert_to_html()}
 
 <h2>Advice</h2>
 <pre>

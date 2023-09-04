@@ -2,8 +2,9 @@ from dataclasses import dataclass
 from typing import List, Optional, Union, Tuple
 
 from data_integration_questionnaire.service.dynamic_quizz_service import (
-    convert_qa_to_string,
+    convert_qa_to_string
 )
+from data_integration_questionnaire.log_init import logger
 
 
 @dataclass
@@ -36,6 +37,25 @@ class Questionnaire:
     def convert_to_string(self) -> str:
         questions, answers = self.convert_to_arrays()
         return convert_qa_to_string(questions, answers)
+    
+    def convert_to_html(self) -> str:
+        html = """<table>       
+"""
+        for qa in self.questions:
+            answer = qa.answer
+            html += f"""
+<tr>
+    <td>
+        <br />
+        Q: {qa.question}
+    </td>
+</tr>
+<tr>
+    <td>A: {answer['content']}</td>
+</tr>
+"""
+        html += "</table>"
+        return html
 
 
 def render_answer(answer: Union[str, dict]) -> str:
@@ -44,9 +64,11 @@ def render_answer(answer: Union[str, dict]) -> str:
     return answer if answer else "No answer"
 
 
-if __name__ == "__main__":
-    print(
-        QuestionAnswer(
-            question="test", answer="", image=None, image_alt=None, image_title=None
-        )
-    )
+def merge_questionnaires(questionnaire_list: List[Questionnaire]):
+    logger.info("Merging %d questionnaires", len(questionnaire_list))
+    questions: List[QuestionAnswer] = []
+    for q in questionnaire_list:
+        questions += q.questions
+        logger.info("Questions length: %d", len(questions))
+    return Questionnaire(questions=questions)
+    

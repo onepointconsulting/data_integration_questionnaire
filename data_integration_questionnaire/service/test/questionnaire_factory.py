@@ -1,3 +1,6 @@
+from typing import List
+
+from data_integration_questionnaire.model.questionnaire import QuestionAnswer, Questionnaire
 
 
 def create_questionnaire_full_on_beginner() -> str:
@@ -73,3 +76,23 @@ Does your organization promote use of open source for data integration?
 We do promote the usage of Open source as much as we can.
 """
 
+def create_questionnaire_list() -> List[Questionnaire]:
+    questionnaire1 = Questionnaire(questions=[
+        QuestionAnswer(
+            question="What steps have you taken to implement no code/low code tools for data integration in your organization? How has this impacted your organization's agility and ability to consume data downstream?",
+            answer = {'createdAt': '', 'content': 'We are using Informatica for our ETL processes. Informatica standardizes the ETL processes and also cuts down the development time.'},
+            image='',
+            image_alt='',
+            image_title=''
+        )
+    ])
+    questionnaire2 = Questionnaire(questions=[
+        QuestionAnswer(
+            question="How are you currently utilizing data catalogs and data lineage to improve data literacy, ensure data accuracy, and manage business change in your organization?",
+            answer = {'createdAt': '', 'content': 'We are right now not using data catalogs. We are only documenting the processes using JIRA Confluence as some sort of Wiki.'},
+            image='',
+            image_alt='',
+            image_title=''
+        )
+    ])
+    return [questionnaire1, questionnaire2]
