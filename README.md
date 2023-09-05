@@ -44,4 +44,12 @@ MAIL_PASSWORD=<Gmail app password or password>
 MAIL_FROM=<email sender>
 MAIL_SERVER=<smtp mail server, like smtp.gmail.com:587>
 
+PROJECT_ROOT=C:/development/playground/langchain/data_integration_questionnaire
+QUESTION_CACHE_FOLDER=c:/tmp/data_integration_questionnaire/cache
+
+# PDF Related
+WKHTMLTOPDF_BINARY=C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe
+TEMPLATE_LOCATION=C:/development/playground/langchain/data_integration_questionnaire/templates
+PDF_FOLDER=C:/tmp/data_integration_questionnaire/pdfs
+
 ```
