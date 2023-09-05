@@ -6,5 +6,5 @@ from data_integration_questionnaire.service.test.questionnaire_factory import cr
 
 def test_questionnaire_html():
     merged: Questionnaire = merge_questionnaires(create_questionnaire_list())
-    html = merged.convert_to_html()
+    html = merged.to_html()
     assert '<table>' in html

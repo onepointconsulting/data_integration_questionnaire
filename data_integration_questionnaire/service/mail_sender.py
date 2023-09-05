@@ -8,7 +8,7 @@ from email.utils import parseaddr
 import re
 from data_integration_questionnaire.model.questionnaire import merge_questionnaires
 
-from data_integration_questionnaire.service.test.questionnaire_factory import create_questionnaire_list
+from data_integration_questionnaire.service.test.questionnaire_factory import create_questionnaire_list, create_simple_questionnaire
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
@@ -52,15 +52,14 @@ Subject: {quizz_title}
 if __name__ == "__main__":
     recipient = "gil.fernandes@gmail.com"
     assert validate_address(recipient)
-    questionnaire_list = create_questionnaire_list()
-    questionnaire = merge_questionnaires(questionnaire_list)
+    questionnaire = create_simple_questionnaire()
     send_email(
         "Gil Fernandeds",
         recipient,
         "Onepoint Data Integration Questionnaire",
         f"""
 <h2>Questionnaire</h2>
-{questionnaire.convert_to_html()}
+{questionnaire.to_html()}
 """,
     )
     

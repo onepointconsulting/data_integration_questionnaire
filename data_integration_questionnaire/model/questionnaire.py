@@ -38,7 +38,7 @@ class Questionnaire:
         questions, answers = self.convert_to_arrays()
         return convert_qa_to_string(questions, answers)
     
-    def convert_to_html(self) -> str:
+    def to_html(self) -> str:
         html = """<table>       
 """
         for qa in self.questions:

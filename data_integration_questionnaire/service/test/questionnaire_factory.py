@@ -1,6 +1,6 @@
 from typing import List
 
-from data_integration_questionnaire.model.questionnaire import QuestionAnswer, Questionnaire
+from data_integration_questionnaire.model.questionnaire import QuestionAnswer, Questionnaire, merge_questionnaires
 
 
 def create_questionnaire_full_on_beginner() -> str:
@@ -96,3 +96,9 @@ def create_questionnaire_list() -> List[Questionnaire]:
         )
     ])
     return [questionnaire1, questionnaire2]
+
+
+
+def create_simple_questionnaire() -> Questionnaire:
+    questionnaire_list = create_questionnaire_list()
+    return merge_questionnaires(questionnaire_list)

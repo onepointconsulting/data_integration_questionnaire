@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400;1,500&family=Montserrat:wght@500&family=Sen:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Bodoni Moda', serif;
+            font-family: 'Montserrat', sans-serif;
+            font-family: 'Sen', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <p style="text-align: right;">Date: {{timestamp}}</p>
+    <p>Big thank you for completing the&nbsp;<strong><a title="Onepoint Consulting Ltd"
+                href="https://www.onepointltd.com/" target="_blank">Onepoint</a>'s Data Integration Assessment
+            Quiz</strong>.</p>
+    <h3>Questionnaire</h3>
+    <table>
+        <tbody>
+            {{questionnaire}}
+        </tbody>
+    </table>
+    <h3>Advice</h3>
+    <ul>
+        {{advices}}
+    </ul>
+    <p>&nbsp;</p>
+</body>
+
+</html>
