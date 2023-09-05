@@ -1,6 +1,26 @@
 [general_messages]
 tip_correct_format = "Tip: Make sure to answer in the correct format"
 
+[data_sources]
+knowledge_base = """Data can be classified according to various attributes of data such as structured/semi-structured/un-structured data based on how the data is structured or how the data entities are related or structured
+relative to each other such as relational data. Based on the how fast the data is changing, data can be \
+classified as static data such as reference data, slowly changing data such as Master Data and slow \
+changing dimensional data, or volatile data such as time series data and transactional data from Point of \
+Sale (POS) systems. Similarly based on the velocity or speed of movement of data or how fast volatile \
+data is moved from the source to the destination, data can be classified as fast data that includes \
+streaming data. Streaming data could include social media data or data from IoT sensor data. Big Data \
+refers to not only large volumes of data but also includes fast data that becomes large volume when \
+accumulated over period of data. Big data includes variety of data including structure, semi-structured \
+and unstructured data. Based on how the data is ageing from the time when the data was generated, \
+data can be classified as operational data or historical data. Based on how frequently the data is \
+consumed, data can also be classified as hot, warm, and cold. Often, data within a system in an \
+organization is not exploited for analytics and such data is referred as dark data. \
+Modern Data Strategy is no longer limited to Big Data but is agnostic of the type of data and includes \
+ANY data whether its fast data or slow data, small data, or big data, transactional, operational, or \
+historical data. There is more and more emphasis on including dark data in scope and bringing it to the \
+data lake. Adoption of LLM for enterprises could hugely benefit from modern data strategy since it \
+includes consolidation of unstructured data on the data lake."""
+
 [data_integration_questionnaire_generator]
 
 system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance best practices"
@@ -87,4 +107,28 @@ The pre-filled questionnaire starts with ==== CUSTOMER QUESTIONNAIRE START ==== 
 {customer_questionnaire}
 {secondary_questionnaire}
 ==== CUSTOMER QUESTIONNAIRE END ====
+"""
+
+[flexible_qustionnaire]
+    [flexible_qustionnaire.initial]
+    question = "In which areas of your data management space do you think you can have most impactful improvement?"
+    system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance tto help a customer with data integration and gouvernance problems"
+    human_message = """Based on the best practices and knowledge base and on an answer to a question answered by a customer, \
+please generate 3 questions that are helpful to this customer to solve data integration and gouvernance issues.
+The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
+The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
+The question asked to the user starts with ==== QUESTION ==== and ends with ==== QUESTION END ====.
+The answer provided by the customer starts with ==== ANSWER ==== and ends with ==== ANSWER END ====.
+==== BEST PRACTICES START ====
+{best_practices}
+==== BEST PRACTICES END ====
+==== KNOWLEDGE BASE START ====
+{knowledge_base}
+==== KNOWLEDGE BASE END ====
+==== QUESTION ====
+{question}
+==== QUESTION END ====
+==== ANSWER ====
+{answer}
+==== ANSWER END ====
 """

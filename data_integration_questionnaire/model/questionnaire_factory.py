@@ -19,7 +19,3 @@ async def questionnaire_factory(generated_questions: List[str]) -> Questionnaire
         question_answers.append(question_answer)
     return Questionnaire(questions=question_answers)
 
-
-if __name__ == "__main__":
-    questionnaire = questionnaire_factory()
-    print(questionnaire)

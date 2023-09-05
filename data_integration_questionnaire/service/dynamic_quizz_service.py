@@ -1,6 +1,6 @@
 import pickle
 from typing import List
-from pydantic import BaseModel, Field
+from data_integration_questionnaire.model.questions_advices import BestPracticesAdvices, BestPracticesQuestions
 
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.prompts import (
@@ -18,31 +18,6 @@ from data_integration_questionnaire.config import cfg
 prompts = read_prompts_toml()
 
 human_message_correct_format = prompts["general_messages"]["tip_correct_format"]
-
-
-class BestPracticesQuestions(BaseModel):
-    """Contains the questions used to help a customer to enforce best practices"""
-
-    questions: List[str] = Field(
-        ...,
-        description="The list of questions given used to enforce best practices.",
-    )
-
-
-class BestPracticesAdvices(BaseModel):
-    """Contains the advices used to help a customer to enforce best practices based on a set of questions and best practices"""
-
-    advices: List[str] = Field(
-        ...,
-        description="The list of advices given used to enforce best practices.",
-    )
-
-    def to_html(self) -> str:
-        html = "<ul>"
-        for advice in self.advices:
-            html += f"<li>{advice}</li>"
-        html += "</ul>"
-        return html
 
 
 def prompt_factory_best_practices() -> ChatPromptTemplate:
