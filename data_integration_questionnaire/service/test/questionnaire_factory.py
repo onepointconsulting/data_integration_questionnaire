@@ -1,6 +1,6 @@
 from typing import List
 
-from data_integration_questionnaire.model.questionnaire import QuestionAnswer, Questionnaire, merge_questionnaires
+from data_integration_questionnaire.model.questionnaire import QuestionAnswer, Questionnaire, merge_questionnaires, question_answer_factory
 
 
 def create_questionnaire_full_on_beginner() -> str:
@@ -102,3 +102,18 @@ def create_questionnaire_list() -> List[Questionnaire]:
 def create_simple_questionnaire() -> Questionnaire:
     questionnaire_list = create_questionnaire_list()
     return merge_questionnaires(questionnaire_list)
+
+
+def create_complete_questionnaire() -> Questionnaire:
+    initial_questionnaire = create_simple_questionnaire()
+    q1 = question_answer_factory(
+        "Considering the benefits of no code/low code tools for data integration, have you considered migrating from Informatica to a cloud-based tool that offers a vast array of connectors for increased agility and ease of data consumption?",
+        "Yes, that would simplify the setup and collaboration between team members. Probably also lower the dependency on hardware. Sounds like a good idea.")
+    q2 = question_answer_factory(
+        "Given the importance of data catalogs and data lineage in improving data literacy and ensuring data accuracy, have you considered implementing a dedicated data catalog tool to supplement your current documentation practices in JIRA Confluence?",
+        "Yes, that is also the case. However we lack knowledge and experience with data catalogs. So we are open to ideas, but would need some consulting and guidance.")
+    q3 = question_answer_factory(
+        "How are you managing the integration of different types of data (structured, semi-structured, unstructured) and ensuring the inclusion of dark data in your data strategy?",
+        "Right now we are only focusing on structured data. But we have a lot of unstructured data that we need to tap into. So we are looking for guidance in this area.")
+    secondary_questionnaire = Questionnaire(questions=[q1, q2, q3])
+    return merge_questionnaires([initial_questionnaire, secondary_questionnaire])

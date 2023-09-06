@@ -25,10 +25,18 @@ from data_integration_questionnaire.service.dynamic_quizz_service import (
     BestPracticesQuestions,
     chain_factory_advices,
     chain_factory_secondary_questionnaire,
-    convert_qa_to_string,
-    execute_initial_questions_chain,
     get_best_practices,
 )
+
+from data_integration_questionnaire.service.flexible_quizz_service import (
+    chain_factory_advisor,
+    chain_factory_initial_question,
+    chain_factory_secondary_questions,
+    execute_initial_questions_chain,
+    prepare_initial_question,
+    prepare_questions_parameters,
+)
+
 from data_integration_questionnaire.service.html_generator import generate_pdf_from
 from data_integration_questionnaire.service.mail_sender import (
     send_email,
@@ -38,7 +46,7 @@ from data_integration_questionnaire.log_init import logger
 
 from asyncer import asyncify
 
-AVATAR = {"CHATBOT": "Chatbot", "USER": "User"}
+AVATAR = {"CHATBOT": "Chatbot", "USER": "You"}
 
 
 def display_image(image_path: str, alt: str, title: str):
@@ -74,8 +82,11 @@ Welcome to the **Onepoints's data integration** questionnaire
 """
     await setup_avatar()
     await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
-    generated_questions = await asyncify(execute_initial_questions_chain)()
-    questionnaire: Questionnaire = await questionnaire_factory(generated_questions)
+    initial_questions: BestPracticesQuestions = execute_initial_questions_chain()
+    questionnaire: Questionnaire = await questionnaire_factory(
+        initial_questions.questions
+    )
+
     await loop_questions(questionnaire)
     await process_secondary_questionnaire(questionnaire)
 
@@ -102,36 +113,60 @@ async def setup_avatar():
 
 
 async def process_secondary_questionnaire(questionnaire: Questionnaire):
-    customer_questionnaire: str = questionnaire.convert_to_string()
-    best_practices = get_best_practices()
-    secondary_chain = chain_factory_secondary_questionnaire()
-    secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
-        {
-            "best_practices": best_practices,
-            "customer_questionnaire": customer_questionnaire,
-        }
+    best_practices_questionnaire = await generate_execute_primary_questions(
+        questionnaire
     )
-    logger.info("secondary_questions: %s", secondary_questions)
-    second_questionnaire: Questionnaire = await questionnaire_factory(
+
+    best_practices_secondary_questionnaire = await generate_execute_secondary_questions(
+        questionnaire, best_practices_questionnaire
+    )
+
+    merged_questions = merge_questionnaires(
+        [
+            questionnaire,
+            best_practices_questionnaire,
+            best_practices_secondary_questionnaire,
+        ]
+    )
+    
+    advisor_chain = chain_factory_advisor()
+    advices: BestPracticesAdvices = await advisor_chain.arun(
+        prepare_questions_parameters(merged_questions)
+    )
+    logger.info("Advices: %s", advices)
+    await display_advices(advices)
+    await generate_display_pdf(advices, merged_questions)
+    await process_send_email(merged_questions, advices)
+
+
+async def generate_execute_secondary_questions(
+    questionnaire, best_practices_questionnaire
+) -> Questionnaire:
+    secondary_chain = chain_factory_secondary_questions()
+    merged_questions = merge_questionnaires(
+        [best_practices_questionnaire, questionnaire]
+    )
+    secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
+        prepare_questions_parameters(questionnaire=merged_questions)
+    )
+    best_practices_secondary_questionnaire: Questionnaire = await questionnaire_factory(
         secondary_questions.questions
     )
-    await loop_questions(second_questionnaire)
+    await loop_questions(best_practices_secondary_questionnaire)
+    return best_practices_secondary_questionnaire
 
-    second_customer_questionnaire: str = second_questionnaire.convert_to_string()
-    advice_chain = chain_factory_advices()
-    advices: BestPracticesAdvices = await advice_chain.arun(
-        {
-            "best_practices": best_practices,
-            "customer_questionnaire": customer_questionnaire,
-            "secondary_questionnaire": second_customer_questionnaire,
-        }
+
+async def generate_execute_primary_questions(questionnaire) -> Questionnaire:
+    input = prepare_initial_question(questionnaire.questions[0].answer)
+    initial_chain = chain_factory_initial_question()
+    initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
+        input
     )
-
-    await display_advices(advices)
-    merged_questionnaire = merge_questionnaires([questionnaire, second_questionnaire])
-
-    await generate_display_pdf(advices, merged_questionnaire)
-    await process_send_email(merged_questionnaire, advices)
+    best_practices_questionnaire: Questionnaire = await questionnaire_factory(
+        initial_best_practices_questions.questions
+    )
+    await loop_questions(best_practices_questionnaire)
+    return best_practices_questionnaire
 
 
 async def generate_display_pdf(advices, merged_questionnaire):

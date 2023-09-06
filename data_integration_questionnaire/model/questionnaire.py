@@ -15,6 +15,17 @@ class QuestionAnswer:
     image_alt: Optional[str]
     image_title: Optional[str]
 
+    
+
+def question_answer_factory(question: str, answer: dict):
+    return QuestionAnswer(
+        question=question,
+        answer = answer,
+        image='',
+        image_alt='',
+        image_title=''
+    )
+
 
 @dataclass
 class Questionnaire:
@@ -24,8 +35,8 @@ class Questionnaire:
         res = ""
         for q in self.questions:
             res += f"""
-{q.question}
-{render_answer(q.answer)}
+Question: {q.question}
+Answer: {render_answer(q.answer)}
 """
         return res
 
@@ -64,7 +75,7 @@ def render_answer(answer: Union[str, dict]) -> str:
     return answer if answer else "No answer"
 
 
-def merge_questionnaires(questionnaire_list: List[Questionnaire]):
+def merge_questionnaires(questionnaire_list: List[Questionnaire]) -> Questionnaire:
     logger.info("Merging %d questionnaires", len(questionnaire_list))
     questions: List[QuestionAnswer] = []
     for q in questionnaire_list:

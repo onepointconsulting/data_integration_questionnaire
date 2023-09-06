@@ -111,8 +111,8 @@ The pre-filled questionnaire starts with ==== CUSTOMER QUESTIONNAIRE START ==== 
 
 [flexible_qustionnaire]
     [flexible_qustionnaire.initial]
-    question = "In which areas of your data management space do you think you can have most impactful improvement?"
-    system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance tto help a customer with data integration and gouvernance problems"
+    question = "Which area of your data ecosystem are you most concerned about?"
+    system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and on an answer to a question answered by a customer, \
 please generate 3 questions that are helpful to this customer to solve data integration and gouvernance issues.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
@@ -131,4 +131,38 @@ The answer provided by the customer starts with ==== ANSWER ==== and ends with =
 ==== ANSWER ====
 {answer}
 ==== ANSWER END ====
+"""
+    [flexible_qustionnaire.secondary]
+    system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
+    human_message = """Based on the best practices and knowledge base and answers to multiple questions answered by a customer, \
+please generate 3 questions that are helpful to this customer to solve data integration and gouvernance issues.
+The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
+The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
+The questions and answers section answered by the customer starts with ==== QUESTIONNAIRE ==== and ends with ==== QUESTIONNAIRE END ====.
+==== BEST PRACTICES START ====
+{best_practices}
+==== BEST PRACTICES END ====
+==== KNOWLEDGE BASE START ====
+{knowledge_base}
+==== KNOWLEDGE BASE END ====
+==== QUESTIONNAIRE ====
+{questions_answers}
+==== QUESTIONNAIRE END ====
+"""
+    [flexible_qustionnaire.advisor]
+    system_message = "You are a data integration and gouvernance advisor that gives advice about data integration and gouvernance to help a customer with data integration and gouvernance problems"
+    human_message = """Based on the best practices and knowledge base and answers to multiple questions answered by a customer, \
+please generate a series of advices that are helpful to this customer to solve data integration and gouvernance issues.
+The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
+The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
+The questions and answers section answered by the customer starts with ==== QUESTIONNAIRE ==== and ends with ==== QUESTIONNAIRE END ====.
+==== BEST PRACTICES START ====
+{best_practices}
+==== BEST PRACTICES END ====
+==== KNOWLEDGE BASE START ====
+{knowledge_base}
+==== KNOWLEDGE BASE END ====
+==== QUESTIONNAIRE ====
+{questions_answers}
+==== QUESTIONNAIRE END ====
 """
