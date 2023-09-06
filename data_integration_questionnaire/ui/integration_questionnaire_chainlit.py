@@ -3,8 +3,6 @@ from typing import List, Optional
 
 import chainlit as cl
 
-from chainlit.config import config
-
 from data_integration_questionnaire.config import cfg
 from data_integration_questionnaire.model.questionnaire import (
     QuestionAnswer,
@@ -16,16 +14,10 @@ from data_integration_questionnaire.model.questionnaire_factory import (
 )
 from data_integration_questionnaire.service.advice_service import (
     create_classification_profile_chain_pydantic,
-    create_input_dict,
-    create_match_profile_chain_pydantic,
-    extract_advices,
 )
 from data_integration_questionnaire.service.dynamic_quizz_service import (
     BestPracticesAdvices,
-    BestPracticesQuestions,
-    chain_factory_advices,
-    chain_factory_secondary_questionnaire,
-    get_best_practices,
+    BestPracticesQuestions
 )
 
 from data_integration_questionnaire.service.flexible_quizz_service import (
@@ -51,6 +43,7 @@ AVATAR = {"CHATBOT": "Chatbot", "USER": "You"}
 
 def display_image(image_path: str, alt: str, title: str):
     return f'![{alt}](/public/images/{image_path} "{title}")'
+    
 
 
 def question_message_factory(question_answer: QuestionAnswer) -> str:
@@ -77,7 +70,7 @@ async def init():
     """
     initial_message = f"""
 # Data Integration Questionnaire
-{display_image('imagesmonitor-1307227_600.webp', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
+{display_image('main_image.png', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
 Welcome to the **Onepoints's data integration** questionnaire
 """
     await setup_avatar()
@@ -104,7 +97,7 @@ async def loop_questions(questionnaire):
 async def setup_avatar():
     await cl.Avatar(
         name=AVATAR["CHATBOT"],
-        url="https://avatars.githubusercontent.com/u/128686189?s=400&u=a1d1553023f8ea0921fba0debbe92a8c5f840dd9&v=4",
+        url="/public/images/natural-language-processing.png",
     ).send()
     await cl.Avatar(
         name=AVATAR["USER"],
@@ -128,7 +121,7 @@ async def process_secondary_questionnaire(questionnaire: Questionnaire):
             best_practices_secondary_questionnaire,
         ]
     )
-    
+
     advisor_chain = chain_factory_advisor()
     advices: BestPracticesAdvices = await advisor_chain.arun(
         prepare_questions_parameters(merged_questions)
