@@ -69,7 +69,7 @@ async def init():
     This application will ask you questions about your data integration strategy and at the end give you some evaluation.
     """
     initial_message = f"""
-# Data Integration Questionnaire
+# Data And Analytics Health Check
 {display_image('main_image.png', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
 Welcome to the **Onepoints's data integration** questionnaire
 """
