@@ -1,3 +1,7 @@
 .markdown-body img {
     width: 100%
 }
+
+.MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root {
+    border: 1px red solid;
+}

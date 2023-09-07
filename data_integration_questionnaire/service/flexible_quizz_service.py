@@ -33,8 +33,9 @@ knowledge_base = prompts["data_sources"]["knowledge_base"]
 
 
 def ask_initial_question() -> BestPracticesQuestions:
-    initial_questions = [prompts['flexible_qustionnaire']['initial']['question']]
+    initial_questions = [prompts["flexible_qustionnaire"]["initial"]["question"]]
     return BestPracticesQuestions(questions=initial_questions)
+
 
 def prompt_factory_generic(
     section: dict, input_variables: List[str]
@@ -128,6 +129,7 @@ def chain_factory_advisor() -> LLMChain:
 
 
 if __name__ == "__main__":
+
     def primary_test():
         chain = chain_factory_initial_question()
         input = prepare_initial_question(
@@ -146,9 +148,11 @@ if __name__ == "__main__":
 
         for q in secondary_questions.questions:
             logger.info(q)
-    
+
     advisor_chain = chain_factory_advisor()
     questionnaire = create_complete_questionnaire()
-    advices: BestPracticesAdvices = advisor_chain.run(prepare_questions_parameters(questionnaire))
+    advices: BestPracticesAdvices = advisor_chain.run(
+        prepare_questions_parameters(questionnaire)
+    )
     for a in advices.advices:
         logger.info(a)

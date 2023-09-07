@@ -32,6 +32,8 @@ def generate_html(questionnaire: Questionnaire, advices: BestPracticesAdvices) -
 
 
 def generate_pdf_from(questionnaire: Questionnaire, advices: BestPracticesAdvices) -> Path:
+    if questionnaire is None:
+        return None
     html = generate_html(questionnaire, advices)
     file_name = cfg.pdf_folder/f"questionnaire_{generate_iso()}.pdf"
     config = pdfkit.configuration(wkhtmltopdf=cfg.wkhtmltopdf_binary.as_posix())

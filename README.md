@@ -16,7 +16,7 @@ pip install poetry
 
 ```
 poetry install
-poetry add --editable \\wsl.localhost\Ubuntu\home\gilf\projects\chainlit-sept-2023\backend\dist\chainlit-0.6.402-py3-none-any.whl
+poetry add --editable \\wsl.localhost\Ubuntu\home\gilf\projects\chainlit-sept-2023\backend\dist\chainlit-0.6.403-py3-none-any.whl
 ```
 
 ## Running
