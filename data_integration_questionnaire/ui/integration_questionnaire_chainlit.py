@@ -84,7 +84,7 @@ Welcome to the **Onepoints's data integration** questionnaire
 
 async def loop_questions(questionnaire, show_sequence=True):
     for i, question_answer in enumerate(questionnaire.questions):
-        message = f"Question {i}: {question_message_factory(question_answer)}" if show_sequence else question_message_factory(question_answer)
+        message = f"Question {i + 1}: {question_message_factory(question_answer)}" if show_sequence else question_message_factory(question_answer)
         response = await cl.AskUserMessage(
             content=message,
             timeout=cfg.ui_timeout,
@@ -147,7 +147,7 @@ async def generate_execute_secondary_questions(
 
     await cl.Message(
         content=f"""
-We have generated {len(best_practices_secondary_questionnaire.questions)} questions to get a better understanding.
+We have generated {len(best_practices_secondary_questionnaire.questions)} more questions to get a better understanding.
 Here they come:
 """,
         author=AVATAR["CHATBOT"]
