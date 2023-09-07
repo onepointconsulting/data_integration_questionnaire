@@ -17,14 +17,14 @@ from data_integration_questionnaire.service.advice_service import (
 )
 from data_integration_questionnaire.service.dynamic_quizz_service import (
     BestPracticesAdvices,
-    BestPracticesQuestions
+    BestPracticesQuestions,
 )
 
 from data_integration_questionnaire.service.flexible_quizz_service import (
     chain_factory_advisor,
     chain_factory_initial_question,
     chain_factory_secondary_questions,
-    execute_initial_questions_chain,
+    ask_initial_question,
     prepare_initial_question,
     prepare_questions_parameters,
 )
@@ -43,7 +43,6 @@ AVATAR = {"CHATBOT": "Chatbot", "USER": "You"}
 
 def display_image(image_path: str, alt: str, title: str):
     return f'![{alt}](/public/images/{image_path} "{title}")'
-    
 
 
 def question_message_factory(question_answer: QuestionAnswer) -> str:
@@ -75,19 +74,19 @@ Welcome to the **Onepoints's data integration** questionnaire
 """
     await setup_avatar()
     await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
-    initial_questions: BestPracticesQuestions = execute_initial_questions_chain()
+    initial_questions: BestPracticesQuestions = ask_initial_question()
     questionnaire: Questionnaire = await questionnaire_factory(
         initial_questions.questions
     )
-
-    await loop_questions(questionnaire)
+    await loop_questions(questionnaire, False)
     await process_secondary_questionnaire(questionnaire)
 
 
-async def loop_questions(questionnaire):
-    for question_answer in questionnaire.questions:
+async def loop_questions(questionnaire, show_sequence=True):
+    for i, question_answer in enumerate(questionnaire.questions):
+        message = f"Question {i}: {question_message_factory(question_answer)}" if show_sequence else question_message_factory(question_answer)
         response = await cl.AskUserMessage(
-            content=question_message_factory(question_answer),
+            content=message,
             timeout=cfg.ui_timeout,
             author=AVATAR["CHATBOT"],
         ).send()
@@ -145,6 +144,15 @@ async def generate_execute_secondary_questions(
     best_practices_secondary_questionnaire: Questionnaire = await questionnaire_factory(
         secondary_questions.questions
     )
+
+    await cl.Message(
+        content=f"""
+We have generated {len(best_practices_secondary_questionnaire.questions)} questions to get a better understanding.
+Here they come:
+""",
+        author=AVATAR["CHATBOT"]
+    ).send()
+
     await loop_questions(best_practices_secondary_questionnaire)
     return best_practices_secondary_questionnaire
 
@@ -158,6 +166,15 @@ async def generate_execute_primary_questions(questionnaire) -> Questionnaire:
     best_practices_questionnaire: Questionnaire = await questionnaire_factory(
         initial_best_practices_questions.questions
     )
+    
+    await cl.Message(
+        content=f"""
+We have generated {len(initial_best_practices_questions.questions)} questions to better understand your concerns.
+Here they come:
+""",
+        author=AVATAR["CHATBOT"]
+    ).send()
+
     await loop_questions(best_practices_questionnaire)
     return best_practices_questionnaire
 

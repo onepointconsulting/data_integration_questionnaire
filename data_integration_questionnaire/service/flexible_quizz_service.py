@@ -32,7 +32,7 @@ best_practices = prompts["data_integration_questionnaire_generator"]["best_pract
 knowledge_base = prompts["data_sources"]["knowledge_base"]
 
 
-def execute_initial_questions_chain() -> BestPracticesQuestions:
+def ask_initial_question() -> BestPracticesQuestions:
     initial_questions = [prompts['flexible_qustionnaire']['initial']['question']]
     return BestPracticesQuestions(questions=initial_questions)
 
