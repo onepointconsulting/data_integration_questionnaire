@@ -38,6 +38,7 @@ from data_integration_questionnaire.log_init import logger
 
 from asyncer import asyncify
 from data_integration_questionnaire.ui.chat_settings_factory import (
+    INITIAL_QUESTION,
     NUMBER_OF_BATCHES,
     QUESTION_PER_BATCH,
     create_chat_settings,
@@ -78,14 +79,16 @@ async def init():
 
 
 @cl.on_settings_update
-async def setup_agent(settings):
+async def setup_agent(settings: cl.ChatSettings):
     logger.info("Settings: %s", settings)
-    number_of_batches = int(settings[NUMBER_OF_BATCHES]) - 1
-    question_per_batch = int(settings[QUESTION_PER_BATCH])
-    await process_questionnaire(number_of_batches, question_per_batch)
+
+    await process_questionnaire(settings)
 
 
-async def process_questionnaire(number_of_batches: int, question_per_batch: int):
+async def process_questionnaire(settings: cl.ChatSettings):
+    number_of_batches: int = int(settings[NUMBER_OF_BATCHES]) - 1
+    question_per_batch: int = int(settings[QUESTION_PER_BATCH])
+    initial_question: str = settings[INITIAL_QUESTION]
     initial_message = f"""
 # Data And Analytics Health Check
 {display_image('main_image.png', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
@@ -93,7 +96,7 @@ Welcome to the **Onepoints's data integration** questionnaire
 """
     await setup_avatar()
     await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
-    initial_questions: BestPracticesQuestions = ask_initial_question()
+    initial_questions: BestPracticesQuestions = ask_initial_question(initial_question)
     initial_questionnaire: Questionnaire = await questionnaire_factory(
         initial_questions.questions
     )
@@ -117,7 +120,26 @@ Welcome to the **Onepoints's data integration** questionnaire
 
     merged_questions = merge_questionnaires([initial_questionnaire, merged_questions])
     log_questionnaire(merged_questions)
+
     # Generate multiple batches of questions.
+    merged_questions = await generate_multiple_batches(
+        number_of_batches, question_per_batch, merged_questions
+    )
+
+    # Produce advices
+    advisor_chain = chain_factory_advisor()
+    advices: BestPracticesAdvices = await advisor_chain.arun(
+        prepare_questions_parameters(merged_questions, False)
+    )
+    logger.info("Advices: %s", advices)
+    await display_advices(advices)
+    await generate_display_pdf(advices, merged_questions)
+    await process_send_email(merged_questions, advices)
+
+
+async def generate_multiple_batches(
+    number_of_batches, question_per_batch, merged_questions
+):
     for batch in range(number_of_batches):
         loop_question_data = LoopQuestionData(
             questionnaire=merged_questions,
@@ -130,15 +152,7 @@ Welcome to the **Onepoints's data integration** questionnaire
         )
         merged_questions = merge_questionnaires([merged_questions, new_questions])
         log_questionnaire(merged_questions)
-
-    advisor_chain = chain_factory_advisor()
-    advices: BestPracticesAdvices = await advisor_chain.arun(
-        prepare_questions_parameters(merged_questions, False)
-    )
-    logger.info("Advices: %s", advices)
-    await display_advices(advices)
-    await generate_display_pdf(advices, merged_questions)
-    await process_send_email(merged_questions, advices)
+    return merged_questions
 
 
 async def loop_questions(loop_question_data: LoopQuestionData):
@@ -171,14 +185,14 @@ async def setup_avatar():
 
 
 async def generate_execute_secondary_questions(
-    loop_question_data = LoopQuestionData
+    loop_question_data=LoopQuestionData,
 ) -> Questionnaire:
     secondary_chain = chain_factory_secondary_questions()
     secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
         prepare_questions_parameters(
             questionnaire=loop_question_data.questionnaire,
             questions_per_batch=loop_question_data.question_per_batch,
-            include_questions_per_batch=True
+            include_questions_per_batch=True,
         )
     )
     best_practices_secondary_questionnaire: Questionnaire = await questionnaire_factory(
@@ -199,8 +213,15 @@ Here you go:
     return best_practices_secondary_questionnaire
 
 
-async def generate_execute_primary_questions(loop_question_data: LoopQuestionData) -> Questionnaire:
-    input = prepare_initial_question(loop_question_data.questionnaire.questions[0].answer, loop_question_data.question_per_batch)
+async def generate_execute_primary_questions(
+    loop_question_data: LoopQuestionData,
+) -> Questionnaire:
+    first_qa = loop_question_data.questionnaire.questions[0]
+    input = prepare_initial_question(
+        first_qa.question,
+        first_qa.answer,
+        loop_question_data.question_per_batch,
+    )
     initial_chain = chain_factory_initial_question()
     initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
         input

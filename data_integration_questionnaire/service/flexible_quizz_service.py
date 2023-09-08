@@ -32,8 +32,10 @@ best_practices = prompts["data_integration_questionnaire_generator"]["best_pract
 knowledge_base = prompts["data_sources"]["knowledge_base"]
 
 
-def ask_initial_question() -> BestPracticesQuestions:
-    initial_questions = [prompts["flexible_qustionnaire"]["initial"]["question"]]
+def ask_initial_question(
+    initial_question: str = prompts["flexible_qustionnaire"]["initial"]["question"],
+) -> BestPracticesQuestions:
+    initial_questions = [initial_question]
     return BestPracticesQuestions(questions=initial_questions)
 
 
@@ -78,11 +80,10 @@ def chain_factory_initial_question() -> LLMChain:
 
 
 def prepare_initial_question(
+    question: str,
     answer: str,
     questions_per_batch: int = prompts["general_settings"]["questions_per_batch"],
 ) -> dict:
-    section = prompts["flexible_qustionnaire"]["initial"]
-    question = section["question"]
     return {
         "best_practices": best_practices,
         "knowledge_base": knowledge_base,
@@ -154,13 +155,14 @@ if __name__ == "__main__":
     def primary_test():
         chain = chain_factory_initial_question()
         input = prepare_initial_question(
+            prompts["flexible_qustionnaire"]["initial"]["question"],
             "There are two main areas of improvement: speed of implementation of data pipelines and documenting the whole data flows and keep the documentation up to date."
         )
         res = chain.run(input)
         for q in res.questions:
             logger.info(q)
 
-    # primary_test()
+    primary_test()
 
     def secondary_test():
         secondary_chain = chain_factory_secondary_questions()
@@ -172,7 +174,7 @@ if __name__ == "__main__":
         for q in secondary_questions.questions:
             logger.info(q)
 
-    secondary_test()
+    # secondary_test()
 
     def advisor_test():
         advisor_chain = chain_factory_advisor()
