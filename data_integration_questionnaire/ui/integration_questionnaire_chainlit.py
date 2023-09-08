@@ -184,6 +184,38 @@ async def setup_avatar():
     ).send()
 
 
+async def generate_execute_primary_questions(
+    loop_question_data: LoopQuestionData,
+) -> Questionnaire:
+    first_qa = loop_question_data.questionnaire.questions[0]
+    input = prepare_initial_question(
+        first_qa.question,
+        first_qa.answer,
+        loop_question_data.question_per_batch,
+    )
+    initial_chain = chain_factory_initial_question()
+    initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
+        input,
+        callbacks=[cl.AsyncLangchainCallbackHandler()]
+    )
+    best_practices_questionnaire: Questionnaire = await questionnaire_factory(
+        initial_best_practices_questions.questions
+    )
+
+    questions_length = len(initial_best_practices_questions.questions)
+    await cl.Message(
+        content=f"""
+We have generated {questions_length} question{'s' if questions_length > 1 else ''} to better understand your concerns.
+Here you go:
+""",
+        author=AVATAR["CHATBOT"],
+    ).send()
+
+    loop_question_data.questionnaire = best_practices_questionnaire
+    await loop_questions(loop_question_data)
+    return best_practices_questionnaire
+
+
 async def generate_execute_secondary_questions(
     loop_question_data=LoopQuestionData,
 ) -> Questionnaire:
@@ -211,37 +243,6 @@ Here you go:
     loop_question_data.questionnaire = best_practices_secondary_questionnaire
     await loop_questions(loop_question_data)
     return best_practices_secondary_questionnaire
-
-
-async def generate_execute_primary_questions(
-    loop_question_data: LoopQuestionData,
-) -> Questionnaire:
-    first_qa = loop_question_data.questionnaire.questions[0]
-    input = prepare_initial_question(
-        first_qa.question,
-        first_qa.answer,
-        loop_question_data.question_per_batch,
-    )
-    initial_chain = chain_factory_initial_question()
-    initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
-        input
-    )
-    best_practices_questionnaire: Questionnaire = await questionnaire_factory(
-        initial_best_practices_questions.questions
-    )
-
-    questions_length = len(initial_best_practices_questions.questions)
-    await cl.Message(
-        content=f"""
-We have generated {questions_length} question{'s' if questions_length > 1 else ''} to better understand your concerns.
-Here you go:
-""",
-        author=AVATAR["CHATBOT"],
-    ).send()
-
-    loop_question_data.questionnaire = best_practices_questionnaire
-    await loop_questions(loop_question_data)
-    return best_practices_questionnaire
 
 
 async def generate_display_pdf(advices, merged_questionnaire):

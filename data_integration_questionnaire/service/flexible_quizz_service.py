@@ -10,6 +10,7 @@ from langchain.prompts import (
     PromptTemplate,
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
+    SystemMessagePromptTemplate,
 )
 
 from data_integration_questionnaire.model.questions_advices import (
@@ -44,14 +45,23 @@ def prompt_factory_generic(
 ) -> ChatPromptTemplate:
     human_message = section["human_message"]
     prompt_msgs = [
-        SystemMessage(content=section["system_message"]),
+        SystemMessagePromptTemplate(
+            prompt=PromptTemplate(
+                template=section["system_message"], input_variables=[]
+            )
+        ),
         HumanMessagePromptTemplate(
             prompt=PromptTemplate(
                 template=human_message,
                 input_variables=input_variables,
             )
         ),
-        HumanMessage(content=human_message_correct_format),
+        HumanMessagePromptTemplate(
+            prompt=PromptTemplate(
+                template=human_message_correct_format,
+                input_variables=[],
+            )
+        )
     ]
     return ChatPromptTemplate(messages=prompt_msgs)
 
@@ -156,7 +166,7 @@ if __name__ == "__main__":
         chain = chain_factory_initial_question()
         input = prepare_initial_question(
             prompts["flexible_qustionnaire"]["initial"]["question"],
-            "There are two main areas of improvement: speed of implementation of data pipelines and documenting the whole data flows and keep the documentation up to date."
+            "There are two main areas of improvement: speed of implementation of data pipelines and documenting the whole data flows and keep the documentation up to date.",
         )
         res = chain.run(input)
         for q in res.questions:
