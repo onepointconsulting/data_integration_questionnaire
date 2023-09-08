@@ -1,6 +1,11 @@
 [general_messages]
 tip_correct_format = "Tip: Make sure to answer in the correct format"
 
+[general_settings]
+number_of_batches = 2
+questions_per_batch = 2
+sequences = 3
+
 [data_sources]
 knowledge_base = """Data can be classified according to various attributes of data such as structured/semi-structured/un-structured data based on how the data is structured or how the data entities are related or structured
 relative to each other such as relational data. Based on the how fast the data is changing, data can be \
@@ -114,7 +119,7 @@ The pre-filled questionnaire starts with ==== CUSTOMER QUESTIONNAIRE START ==== 
     question = "Which area of your data ecosystem are you most concerned about?"
     system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and on an answer to a question answered by a customer, \
-please generate 3 questions that are helpful to this customer to solve data integration and gouvernance issues.
+please generate {questions_per_batch} questions that are helpful to this customer to solve data integration and gouvernance issues.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
 The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
 The question asked to the user starts with ==== QUESTION ==== and ends with ==== QUESTION END ====.
@@ -135,7 +140,7 @@ The answer provided by the customer starts with ==== ANSWER ==== and ends with =
     [flexible_qustionnaire.secondary]
     system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and answers to multiple questions answered by a customer, \
-please generate 3 questions that are helpful to this customer to solve data integration and gouvernance issues.
+please generate {questions_per_batch} questions that are helpful to this customer to solve data integration and gouvernance issues.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
 The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
 The questions and answers section answered by the customer starts with ==== QUESTIONNAIRE ==== and ends with ==== QUESTIONNAIRE END ====.

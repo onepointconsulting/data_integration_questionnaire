@@ -37,6 +37,12 @@ from data_integration_questionnaire.service.mail_sender import (
 from data_integration_questionnaire.log_init import logger
 
 from asyncer import asyncify
+from data_integration_questionnaire.ui.chat_settings_factory import (
+    NUMBER_OF_BATCHES,
+    QUESTION_PER_BATCH,
+    create_chat_settings,
+)
+from data_integration_questionnaire.ui.model import LoopQuestionData
 
 AVATAR = {"CHATBOT": "Chatbot", "USER": "You"}
 
@@ -67,6 +73,19 @@ async def init():
     Main entry point for the application.
     This application will ask you questions about your data integration strategy and at the end give you some evaluation.
     """
+    settings = await create_chat_settings()
+    await setup_agent(settings)
+
+
+@cl.on_settings_update
+async def setup_agent(settings):
+    logger.info("Settings: %s", settings)
+    number_of_batches = int(settings[NUMBER_OF_BATCHES]) - 1
+    question_per_batch = int(settings[QUESTION_PER_BATCH])
+    await process_questionnaire(number_of_batches, question_per_batch)
+
+
+async def process_questionnaire(number_of_batches: int, question_per_batch: int):
     initial_message = f"""
 # Data And Analytics Health Check
 {display_image('main_image.png', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
@@ -75,16 +94,63 @@ Welcome to the **Onepoints's data integration** questionnaire
     await setup_avatar()
     await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
     initial_questions: BestPracticesQuestions = ask_initial_question()
-    questionnaire: Questionnaire = await questionnaire_factory(
+    initial_questionnaire: Questionnaire = await questionnaire_factory(
         initial_questions.questions
     )
-    await loop_questions(questionnaire, False)
-    await process_secondary_questionnaire(questionnaire)
+
+    await loop_questions(
+        LoopQuestionData(
+            questionnaire=initial_questionnaire,
+            show_sequence=False,
+            batch_number=0,
+            question_per_batch=1,
+        )
+    )
+    merged_questions: Questionnaire = await generate_execute_primary_questions(
+        LoopQuestionData(
+            questionnaire=initial_questionnaire,
+            show_sequence=True,
+            batch_number=0,
+            question_per_batch=question_per_batch,
+        )
+    )
+
+    merged_questions = merge_questionnaires([initial_questionnaire, merged_questions])
+    log_questionnaire(merged_questions)
+    # Generate multiple batches of questions.
+    for batch in range(number_of_batches):
+        loop_question_data = LoopQuestionData(
+            questionnaire=merged_questions,
+            show_sequence=True,
+            batch_number=batch + 1,
+            question_per_batch=question_per_batch,
+        )
+        new_questions: Questionnaire = await generate_execute_secondary_questions(
+            loop_question_data
+        )
+        merged_questions = merge_questionnaires([merged_questions, new_questions])
+        log_questionnaire(merged_questions)
+
+    advisor_chain = chain_factory_advisor()
+    advices: BestPracticesAdvices = await advisor_chain.arun(
+        prepare_questions_parameters(merged_questions, False)
+    )
+    logger.info("Advices: %s", advices)
+    await display_advices(advices)
+    await generate_display_pdf(advices, merged_questions)
+    await process_send_email(merged_questions, advices)
 
 
-async def loop_questions(questionnaire, show_sequence=True):
-    for i, question_answer in enumerate(questionnaire.questions):
-        message = f"Question {i + 1}: {question_message_factory(question_answer)}" if show_sequence else question_message_factory(question_answer)
+async def loop_questions(loop_question_data: LoopQuestionData):
+    question_start_number = (
+        loop_question_data.batch_number * loop_question_data.question_per_batch
+    )
+    for i, question_answer in enumerate(loop_question_data.questionnaire.questions):
+        message = (
+            f"Question {int(i + 1 + question_start_number)}: {question_message_factory(question_answer)}"
+            if loop_question_data.show_sequence
+            else question_message_factory(question_answer)
+        )
         response = await cl.AskUserMessage(
             content=message,
             timeout=cfg.ui_timeout,
@@ -104,61 +170,37 @@ async def setup_avatar():
     ).send()
 
 
-async def process_secondary_questionnaire(questionnaire: Questionnaire):
-    best_practices_questionnaire = await generate_execute_primary_questions(
-        questionnaire
-    )
-
-    best_practices_secondary_questionnaire = await generate_execute_secondary_questions(
-        questionnaire, best_practices_questionnaire
-    )
-
-    merged_questions = merge_questionnaires(
-        [
-            questionnaire,
-            best_practices_questionnaire,
-            best_practices_secondary_questionnaire,
-        ]
-    )
-
-    advisor_chain = chain_factory_advisor()
-    advices: BestPracticesAdvices = await advisor_chain.arun(
-        prepare_questions_parameters(merged_questions)
-    )
-    logger.info("Advices: %s", advices)
-    await display_advices(advices)
-    await generate_display_pdf(advices, merged_questions)
-    await process_send_email(merged_questions, advices)
-
-
 async def generate_execute_secondary_questions(
-    questionnaire, best_practices_questionnaire
+    loop_question_data = LoopQuestionData
 ) -> Questionnaire:
     secondary_chain = chain_factory_secondary_questions()
-    merged_questions = merge_questionnaires(
-        [best_practices_questionnaire, questionnaire]
-    )
     secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
-        prepare_questions_parameters(questionnaire=merged_questions)
+        prepare_questions_parameters(
+            questionnaire=loop_question_data.questionnaire,
+            questions_per_batch=loop_question_data.question_per_batch,
+            include_questions_per_batch=True
+        )
     )
     best_practices_secondary_questionnaire: Questionnaire = await questionnaire_factory(
         secondary_questions.questions
     )
 
+    questions_length = len(best_practices_secondary_questionnaire.questions)
     await cl.Message(
         content=f"""
-We have generated {len(best_practices_secondary_questionnaire.questions)} more questions to get a better understanding.
-Here they come:
+We have generated {questions_length} more question{'s' if questions_length > 1 else ''} to get a better understanding.
+Here you go:
 """,
-        author=AVATAR["CHATBOT"]
+        author=AVATAR["CHATBOT"],
     ).send()
 
-    await loop_questions(best_practices_secondary_questionnaire)
+    loop_question_data.questionnaire = best_practices_secondary_questionnaire
+    await loop_questions(loop_question_data)
     return best_practices_secondary_questionnaire
 
 
-async def generate_execute_primary_questions(questionnaire) -> Questionnaire:
-    input = prepare_initial_question(questionnaire.questions[0].answer)
+async def generate_execute_primary_questions(loop_question_data: LoopQuestionData) -> Questionnaire:
+    input = prepare_initial_question(loop_question_data.questionnaire.questions[0].answer, loop_question_data.question_per_batch)
     initial_chain = chain_factory_initial_question()
     initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
         input
@@ -166,16 +208,18 @@ async def generate_execute_primary_questions(questionnaire) -> Questionnaire:
     best_practices_questionnaire: Questionnaire = await questionnaire_factory(
         initial_best_practices_questions.questions
     )
-    
+
+    questions_length = len(initial_best_practices_questions.questions)
     await cl.Message(
         content=f"""
-We have generated {len(initial_best_practices_questions.questions)} questions to better understand your concerns.
-Here they come:
+We have generated {questions_length} question{'s' if questions_length > 1 else ''} to better understand your concerns.
+Here you go:
 """,
-        author=AVATAR["CHATBOT"]
+        author=AVATAR["CHATBOT"],
     ).send()
 
-    await loop_questions(best_practices_questionnaire)
+    loop_question_data.questionnaire = best_practices_questionnaire
+    await loop_questions(loop_question_data)
     return best_practices_questionnaire
 
 
@@ -311,3 +355,10 @@ For more information, please visit our <a href="https://onepointltd.com">webpage
         content=f"The questionnaire is complete. Please press the 'New Chat' button to restart.",
         author=AVATAR["CHATBOT"],
     ).send()
+
+
+def log_questionnaire(merged_questions: Questionnaire):
+    for qa in merged_questions.questions:
+        logger.info("Q: %s", qa.question)
+        logger.info("A: %s", qa.answer)
+        print()

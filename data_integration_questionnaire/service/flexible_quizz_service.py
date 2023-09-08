@@ -63,6 +63,7 @@ def prompt_factory_initial_questions() -> ChatPromptTemplate:
             "knowledge_base",
             "question",
             "answer",
+            "questions_per_batch",
         ],
     )
 
@@ -76,7 +77,10 @@ def chain_factory_initial_question() -> LLMChain:
     )
 
 
-def prepare_initial_question(answer: str) -> dict:
+def prepare_initial_question(
+    answer: str,
+    questions_per_batch: int = prompts["general_settings"]["questions_per_batch"],
+) -> dict:
     section = prompts["flexible_qustionnaire"]["initial"]
     question = section["question"]
     return {
@@ -84,13 +88,23 @@ def prepare_initial_question(answer: str) -> dict:
         "knowledge_base": knowledge_base,
         "question": question,
         "answer": answer,
+        "questions_per_batch": questions_per_batch,
     }
 
 
-def prompt_factory_basic(sub_section) -> ChatPromptTemplate:
+def prompt_factory_basic(
+    sub_section, include_questions_per_batch=True
+) -> ChatPromptTemplate:
+    parameters = [
+        "best_practices",
+        "knowledge_base",
+        "questions_answers",
+    ]
+    if include_questions_per_batch:
+        parameters.append("questions_per_batch")
     return prompt_factory_generic(
         prompts["flexible_qustionnaire"][sub_section],
-        ["best_practices", "knowledge_base", "questions_answers"],
+        parameters,
     )
 
 
@@ -107,16 +121,23 @@ def chain_factory_secondary_questions() -> LLMChain:
     )
 
 
-def prepare_questions_parameters(questionnaire: Questionnaire) -> dict:
-    return {
+def prepare_questions_parameters(
+    questionnaire: Questionnaire,
+    questions_per_batch: int = prompts["general_settings"]["questions_per_batch"],
+    include_questions_per_batch=True,
+) -> dict:
+    config = {
         "best_practices": best_practices,
         "knowledge_base": knowledge_base,
         "questions_answers": str(questionnaire),
     }
+    if include_questions_per_batch:
+        config["questions_per_batch"] = questions_per_batch
+    return config
 
 
 def prompt_factory_advisor() -> ChatPromptTemplate:
-    return prompt_factory_basic("advisor")
+    return prompt_factory_basic("advisor", False)
 
 
 def chain_factory_advisor() -> LLMChain:
@@ -139,7 +160,9 @@ if __name__ == "__main__":
         for q in res.questions:
             logger.info(q)
 
-    def sedondary_test():
+    # primary_test()
+
+    def secondary_test():
         secondary_chain = chain_factory_secondary_questions()
         questionnaire = create_simple_questionnaire()
         secondary_questions: BestPracticesQuestions = secondary_chain.run(
@@ -149,10 +172,13 @@ if __name__ == "__main__":
         for q in secondary_questions.questions:
             logger.info(q)
 
-    advisor_chain = chain_factory_advisor()
-    questionnaire = create_complete_questionnaire()
-    advices: BestPracticesAdvices = advisor_chain.run(
-        prepare_questions_parameters(questionnaire)
-    )
-    for a in advices.advices:
-        logger.info(a)
+    secondary_test()
+
+    def advisor_test():
+        advisor_chain = chain_factory_advisor()
+        questionnaire = create_complete_questionnaire()
+        advices: BestPracticesAdvices = advisor_chain.run(
+            prepare_questions_parameters(questionnaire)
+        )
+        for a in advices.advices:
+            logger.info(a)
