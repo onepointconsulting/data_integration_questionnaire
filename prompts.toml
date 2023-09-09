@@ -120,10 +120,11 @@ The pre-filled questionnaire starts with ==== CUSTOMER QUESTIONNAIRE START ==== 
     system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and on an answer to a question answered by a customer, \
 please generate {questions_per_batch} questions that are helpful to this customer to solve data integration and gouvernance issues.
+In case you detect any questions in the user answer, please also provide some answers based on your knowledge.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
 The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
 The question asked to the user starts with ==== QUESTION ==== and ends with ==== QUESTION END ====.
-The answer provided by the customer starts with ==== ANSWER ==== and ends with ==== ANSWER END ====.
+The user answer provided by the customer starts with ==== ANSWER ==== and ends with ==== ANSWER END ====.
 ==== BEST PRACTICES START ====
 {best_practices}
 ==== BEST PRACTICES END ====
@@ -141,9 +142,11 @@ The answer provided by the customer starts with ==== ANSWER ==== and ends with =
     system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and answers to multiple questions answered by a customer, \
 please generate {questions_per_batch} questions that are helpful to this customer to solve data integration and gouvernance issues.
+In case you detect any questions in the user answers, please also provide some answers based on your knowledge.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
 The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
 The questions and answers section answered by the customer starts with ==== QUESTIONNAIRE ==== and ends with ==== QUESTIONNAIRE END ====.
+The user answers are in the section that starts with ==== ANSWERS ==== and ends with ==== ANSWERS END ====.
 ==== BEST PRACTICES START ====
 {best_practices}
 ==== BEST PRACTICES END ====
@@ -153,6 +156,9 @@ The questions and answers section answered by the customer starts with ==== QUES
 ==== QUESTIONNAIRE ====
 {questions_answers}
 ==== QUESTIONNAIRE END ====
+==== ANSWERS ====
+{answers}
+==== ANSWERS END ====
 """
     [flexible_qustionnaire.advisor]
     system_message = "You are a data integration and gouvernance advisor that gives advice about data integration and gouvernance to help a customer with data integration and gouvernance problems"

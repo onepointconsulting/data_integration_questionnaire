@@ -41,7 +41,8 @@ class Config:
     assert template_location.exists()
     pdf_folder = Path(os.getenv("PDF_FOLDER"))
     create_if_not_exists(pdf_folder)
-
+    use_tasklist = os.getenv("TASKLIST") == "true"
+    knowledge_base_path = Path(os.getenv("KNOWLEDGE_BASE_PATH"))
 
 cfg = Config()
 
@@ -62,3 +63,4 @@ if __name__ == "__main__":
     logger.info("mail_config user: %s", mail_config.mail_user)
     logger.info("wkhtmltopdf: %s", cfg.wkhtmltopdf_binary.as_posix())
     logger.info("template_location: %s", cfg.template_location.as_posix())
+    logger.info("use_tasklist: %s", cfg.use_tasklist)

@@ -7,6 +7,7 @@ This is a reverse chatbot that asks the users questions about data integration p
 We suggest to use [Conda](https://docs.conda.io/en/latest/) to manage the virtual environment and then install poetry.
 
 ```
+conda remove -n data_integration_questionnaire --all
 conda create -n data_integration_questionnaire python=3.11
 conda activate data_integration_questionnaire
 pip install poetry
@@ -16,7 +17,7 @@ pip install poetry
 
 ```
 poetry install
-poetry add --editable \\wsl.localhost\Ubuntu\home\gilf\projects\chainlit-sept-2023\backend\dist\chainlit-0.6.403-py3-none-any.whl
+poetry add --editable \\wsl.localhost\Ubuntu\home\gilf\projects\chainlit-sept-2023\backend\dist\chainlit-0.6.404-py3-none-any.whl
 ```
 
 ## Running

@@ -43,6 +43,7 @@ from data_integration_questionnaire.ui.chat_settings_factory import (
     QUESTION_PER_BATCH,
     create_chat_settings,
 )
+from data_integration_questionnaire.ui.customized_chainlit_callback import OnepointAsyncLangchainCallbackHandler
 from data_integration_questionnaire.ui.model import LoopQuestionData
 
 AVATAR = {"CHATBOT": "Chatbot", "USER": "You"}
@@ -95,14 +96,14 @@ async def process_questionnaire(settings: cl.ChatSettings):
 Welcome to the **Onepoints's data integration** questionnaire
 """
     await setup_avatar()
-    await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
     initial_questions: BestPracticesQuestions = ask_initial_question(initial_question)
     initial_questionnaire: Questionnaire = await questionnaire_factory(
-        initial_questions.questions
+        initial_questions
     )
 
     await loop_questions(
         LoopQuestionData(
+            message=initial_message,
             questionnaire=initial_questionnaire,
             show_sequence=False,
             batch_number=0,
@@ -111,6 +112,7 @@ Welcome to the **Onepoints's data integration** questionnaire
     )
     merged_questions: Questionnaire = await generate_execute_primary_questions(
         LoopQuestionData(
+            message="",
             questionnaire=initial_questionnaire,
             show_sequence=True,
             batch_number=0,
@@ -129,7 +131,8 @@ Welcome to the **Onepoints's data integration** questionnaire
     # Produce advices
     advisor_chain = chain_factory_advisor()
     advices: BestPracticesAdvices = await advisor_chain.arun(
-        prepare_questions_parameters(merged_questions, False)
+        prepare_questions_parameters(merged_questions, False),
+        callbacks=[OnepointAsyncLangchainCallbackHandler()]
     )
     logger.info("Advices: %s", advices)
     await display_advices(advices)
@@ -142,6 +145,7 @@ async def generate_multiple_batches(
 ):
     for batch in range(number_of_batches):
         loop_question_data = LoopQuestionData(
+            message="",
             questionnaire=merged_questions,
             show_sequence=True,
             batch_number=batch + 1,
@@ -159,6 +163,8 @@ async def loop_questions(loop_question_data: LoopQuestionData):
     question_start_number = (
         loop_question_data.batch_number * loop_question_data.question_per_batch
     )
+    await loop_clarifications(loop_question_data)
+    await cl.Message(content=loop_question_data.message, author=AVATAR["CHATBOT"]).send()
     for i, question_answer in enumerate(loop_question_data.questionnaire.questions):
         message = (
             f"Question {int(i + 1 + question_start_number)}: {question_message_factory(question_answer)}"
@@ -171,6 +177,17 @@ async def loop_questions(loop_question_data: LoopQuestionData):
             author=AVATAR["CHATBOT"],
         ).send()
         question_answer.answer = response
+        
+
+
+async def loop_clarifications(loop_question_data: LoopQuestionData):
+    clarifications = loop_question_data.questionnaire.clarifications
+    if clarifications:
+        msg_id = await cl.Message(content="#### Clarifications\n").send()
+        clarifications_str = ""
+        for c in clarifications:
+            clarifications_str += f"- {c}\n"
+        await cl.Message(content=clarifications_str, parent_id=msg_id).send()
 
 
 async def setup_avatar():
@@ -194,23 +211,20 @@ async def generate_execute_primary_questions(
         loop_question_data.question_per_batch,
     )
     initial_chain = chain_factory_initial_question()
+    await cl.Message(content="").send()
     initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
         input,
-        callbacks=[cl.AsyncLangchainCallbackHandler()]
+        callbacks=[OnepointAsyncLangchainCallbackHandler()]
     )
     best_practices_questionnaire: Questionnaire = await questionnaire_factory(
-        initial_best_practices_questions.questions
+        initial_best_practices_questions
     )
 
     questions_length = len(initial_best_practices_questions.questions)
-    await cl.Message(
-        content=f"""
+    loop_question_data.message = f"""
 We have generated {questions_length} question{'s' if questions_length > 1 else ''} to better understand your concerns.
 Here you go:
-""",
-        author=AVATAR["CHATBOT"],
-    ).send()
-
+"""
     loop_question_data.questionnaire = best_practices_questionnaire
     await loop_questions(loop_question_data)
     return best_practices_questionnaire
@@ -220,27 +234,25 @@ async def generate_execute_secondary_questions(
     loop_question_data=LoopQuestionData,
 ) -> Questionnaire:
     secondary_chain = chain_factory_secondary_questions()
+    await cl.Message(content="").send()
     secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
         prepare_questions_parameters(
             questionnaire=loop_question_data.questionnaire,
             questions_per_batch=loop_question_data.question_per_batch,
             include_questions_per_batch=True,
-        )
+        ),
+        callbacks=[OnepointAsyncLangchainCallbackHandler()]
     )
     best_practices_secondary_questionnaire: Questionnaire = await questionnaire_factory(
-        secondary_questions.questions
+        secondary_questions
     )
 
     questions_length = len(best_practices_secondary_questionnaire.questions)
-    await cl.Message(
-        content=f"""
+    loop_question_data.questionnaire = best_practices_secondary_questionnaire
+    loop_question_data.message = f"""
 We have generated {questions_length} more question{'s' if questions_length > 1 else ''} to get a better understanding.
 Here you go:
-""",
-        author=AVATAR["CHATBOT"],
-    ).send()
-
-    loop_question_data.questionnaire = best_practices_secondary_questionnaire
+"""
     await loop_questions(loop_question_data)
     return best_practices_secondary_questionnaire
 
@@ -269,9 +281,12 @@ async def display_advices(advices: BestPracticesAdvices) -> Optional[str]:
             author=AVATAR["CHATBOT"],
         ).send()
         advice_markdown = "\n- ".join(advices)
-        task_list: cl.TaskList = await create_task_list(advices)
-        cl.user_session.set("task_list", task_list)
-        actions: List[cl.Action] = create_advice_task_actions(advices)
+
+        actions = []
+        if cfg.use_tasklist:
+            task_list: cl.TaskList = await create_task_list(advices)
+            cl.user_session.set("task_list", task_list)
+            actions: List[cl.Action] = create_advice_task_actions(advices)
         await cl.Message(
             content="\n- " + advice_markdown, author=AVATAR["CHATBOT"], actions=actions
         ).send()
@@ -315,7 +330,8 @@ async def on_action(action):
 
 async def process_classification(questionnaire, quizz_input, advice_markdown):
     classification_chain = create_classification_profile_chain_pydantic()
-    res = await classification_chain.arun(quizz_input)
+    res = await classification_chain.arun(quizz_input,
+                                          callbacks=[OnepointAsyncLangchainCallbackHandler()])
     await cl.Message(
         content=f"Classification: {res.classification}", author=AVATAR["CHATBOT"]
     ).send()
@@ -384,3 +400,32 @@ def log_questionnaire(merged_questions: Questionnaire):
         logger.info("Q: %s", qa.question)
         logger.info("A: %s", qa.answer)
         print()
+
+
+
+from chainlit.server import app
+from fastapi import File, UploadFile
+from data_integration_questionnaire.config import cfg
+from data_integration_questionnaire.log_init import logger
+
+CODES = {
+    'OK': 'OK',
+    'ERROR': 'ERROR'
+}
+
+@app.post("/onepoint/best_practices")
+def upload_best_practices(file: UploadFile = File(...)):
+    try:
+        contents = file.file.read()
+        with open(cfg.knowledge_base_path, 'wb') as f:
+            f.write(contents)
+    except Exception as e:
+        logger.exception("Could not upload file.")
+        return {
+            "code": CODES['ERROR'],
+            "message": f"Failed to upload file: {str(e)}"
+        }
+    return {
+        "code": CODES['OK'],
+        "message": f"Successfully uploaded {file.filename}"
+    }

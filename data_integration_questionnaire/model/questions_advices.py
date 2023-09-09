@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel, Field
 
-from typing import List
+from typing import List, Optional
 
 
 class BestPracticesQuestions(BaseModel):
@@ -12,6 +12,14 @@ class BestPracticesQuestions(BaseModel):
         ...,
         description="The list of questions given used to enforce best practices.",
     )
+
+    answers: Optional[List[str]] = Field(
+        ...,
+        description="Answers to any questions from mthe user answers.",
+    )
+
+    def __str__(self) -> str:
+        return "\n".join(self.questions)
 
 
 class BestPracticesAdvices(BaseModel):

@@ -30,6 +30,7 @@ def question_answer_factory(question: str, answer: dict):
 @dataclass
 class Questionnaire:
     questions: List[QuestionAnswer]
+    clarifications: Optional[List[str]]
 
     def __str__(self):
         res = ""
@@ -67,6 +68,9 @@ Answer: {render_answer(q.answer)}
 """
         html += "</table>"
         return html
+    
+    def answers_str(self) -> str:
+        return "\n\n".join([q.answer['content'] for q in self.questions])
 
 
 def render_answer(answer: Union[str, dict]) -> str:
@@ -78,8 +82,11 @@ def render_answer(answer: Union[str, dict]) -> str:
 def merge_questionnaires(questionnaire_list: List[Questionnaire]) -> Questionnaire:
     logger.info("Merging %d questionnaires", len(questionnaire_list))
     questions: List[QuestionAnswer] = []
+    clarifications = []
     for q in questionnaire_list:
         questions += q.questions
         logger.info("Questions length: %d", len(questions))
-    return Questionnaire(questions=questions)
+        if q.clarifications:
+            clarifications.extend(q.clarifications)
+    return Questionnaire(questions=questions, clarifications=clarifications)
     

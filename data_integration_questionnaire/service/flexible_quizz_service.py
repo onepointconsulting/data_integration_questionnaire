@@ -5,7 +5,6 @@ from data_integration_questionnaire.service.test.questionnaire_factory import (
     create_simple_questionnaire,
 )
 
-from langchain.schema import HumanMessage, SystemMessage
 from langchain.prompts import (
     PromptTemplate,
     ChatPromptTemplate,
@@ -27,9 +26,16 @@ from langchain.chains.openai_functions import create_structured_output_chain
 
 prompts = read_prompts_toml()
 
+def read_best_practices() -> str:
+    if not cfg.knowledge_base_path.exists():
+        return prompts["data_integration_questionnaire_generator"]["best_practices"]
+    else:
+        with open(cfg.knowledge_base_path, 'r') as f:
+            return f.read()
+
 
 human_message_correct_format = prompts["general_messages"]["tip_correct_format"]
-best_practices = prompts["data_integration_questionnaire_generator"]["best_practices"]
+best_practices = read_best_practices()
 knowledge_base = prompts["data_sources"]["knowledge_base"]
 
 
@@ -37,7 +43,7 @@ def ask_initial_question(
     initial_question: str = prompts["flexible_qustionnaire"]["initial"]["question"],
 ) -> BestPracticesQuestions:
     initial_questions = [initial_question]
-    return BestPracticesQuestions(questions=initial_questions)
+    return BestPracticesQuestions(questions=initial_questions, answers=None)
 
 
 def prompt_factory_generic(
@@ -113,6 +119,8 @@ def prompt_factory_basic(
     ]
     if include_questions_per_batch:
         parameters.append("questions_per_batch")
+    if sub_section == "secondary":
+        parameters.append("answers")
     return prompt_factory_generic(
         prompts["flexible_qustionnaire"][sub_section],
         parameters,
@@ -141,6 +149,7 @@ def prepare_questions_parameters(
         "best_practices": best_practices,
         "knowledge_base": knowledge_base,
         "questions_answers": str(questionnaire),
+        "answers": questionnaire.answers_str()
     }
     if include_questions_per_batch:
         config["questions_per_batch"] = questions_per_batch
@@ -166,11 +175,15 @@ if __name__ == "__main__":
         chain = chain_factory_initial_question()
         input = prepare_initial_question(
             prompts["flexible_qustionnaire"]["initial"]["question"],
-            "There are two main areas of improvement: speed of implementation of data pipelines and documenting the whole data flows and keep the documentation up to date.",
+            "There are two main areas of improvement: speed of implementation of data pipelines and documenting the whole data flows and keep the documentation up to date. Do you know what a data catalog is be the way?",
         )
         res = chain.run(input)
         for q in res.questions:
             logger.info(q)
+        if res.answers:
+            logger.info('There are answers:')
+            for a in res.answers:
+                logger.info(a)
 
     primary_test()
 
