@@ -4,7 +4,7 @@ from data_integration_questionnaire.model.questionnaire import (
     QuestionAnswer,
     Questionnaire,
 )
-from data_integration_questionnaire.model.questions_advices import BestPracticesQuestions
+from data_integration_questionnaire.model.openai_schema import BestPracticesQuestions
 from data_integration_questionnaire.service.dynamic_quizz_service import execute_initial_questions_chain
 
 

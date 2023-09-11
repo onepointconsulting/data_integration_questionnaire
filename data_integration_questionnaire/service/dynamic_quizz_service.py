@@ -1,6 +1,6 @@
 import pickle
 from typing import List
-from data_integration_questionnaire.model.questions_advices import BestPracticesAdvices, BestPracticesQuestions
+from data_integration_questionnaire.model.openai_schema import BestPracticesAdvices, BestPracticesQuestions
 
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.prompts import (

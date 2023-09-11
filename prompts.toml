@@ -177,3 +177,24 @@ The questions and answers section answered by the customer starts with ==== QUES
 {questions_answers}
 ==== QUESTIONNAIRE END ====
 """
+
+[sentiment]
+system_message = "You are an expert in terms of getting different types of sentiments from sentences."
+human_message = """Given this input that starts with === INPUT START === and ends with === INPUT END ===
+=== INPUT START ===
+{answer}
+=== INPUT END ===
+can you tell me whether there is a question in it or not and whether the overall sentiment of the text indicates some sort of confusion?"""
+human_message_extraction = """Given this input that starts with === INPUT START === and ends with === INPUT END ===
+=== INPUT START ===
+{answer}
+=== INPUT END ===
+can you extract question, if there is one?"""
+
+[clarifications]
+system_message = "You are an expert in terms of answering user questions like a professional data engineer."
+human_message = """Given this input that starts with === INPUT START === and ends with === INPUT END ===
+=== INPUT START ===
+{questions}
+=== INPUT END ===
+can you please answer all questions you see in it?"""

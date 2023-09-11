@@ -12,7 +12,7 @@ from langchain.prompts import (
     SystemMessagePromptTemplate,
 )
 
-from data_integration_questionnaire.model.questions_advices import (
+from data_integration_questionnaire.model.openai_schema import (
     BestPracticesAdvices,
     BestPracticesQuestions,
 )

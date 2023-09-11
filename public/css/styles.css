@@ -3,5 +3,9 @@
 }
 
 .MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root {
-    border: 1px red solid;
+    border: 1px #0084D7 solid;
+}
+
+.generated-message {
+    color: #0084D7
 }

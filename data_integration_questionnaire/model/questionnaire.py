@@ -70,7 +70,7 @@ Answer: {render_answer(q.answer)}
         return html
     
     def answers_str(self) -> str:
-        return "\n\n".join([q.answer['content'] for q in self.questions])
+        return "\n\n".join([q.answer['content'] if 'content' in q.answer else q.anwer for q in self.questions])
 
 
 def render_answer(answer: Union[str, dict]) -> str:

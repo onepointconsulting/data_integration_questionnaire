@@ -12,8 +12,16 @@ from data_integration_questionnaire.model.questionnaire import (
 from data_integration_questionnaire.model.questionnaire_factory import (
     questionnaire_factory,
 )
+from data_integration_questionnaire.model.openai_schema import (
+    Clarifications,
+    ResponseTags,
+)
 from data_integration_questionnaire.service.advice_service import (
     create_classification_profile_chain_pydantic,
+)
+from data_integration_questionnaire.service.clarification_service import (
+    clarification_chain_factory,
+    create_clarification_input,
 )
 from data_integration_questionnaire.service.dynamic_quizz_service import (
     BestPracticesAdvices,
@@ -37,16 +45,22 @@ from data_integration_questionnaire.service.mail_sender import (
 from data_integration_questionnaire.log_init import logger
 
 from asyncer import asyncify
+from data_integration_questionnaire.service.tagging_service import (
+    sentiment_chain_factory,
+)
 from data_integration_questionnaire.ui.chat_settings_factory import (
     INITIAL_QUESTION,
     NUMBER_OF_BATCHES,
     QUESTION_PER_BATCH,
     create_chat_settings,
 )
-from data_integration_questionnaire.ui.customized_chainlit_callback import OnepointAsyncLangchainCallbackHandler
+from data_integration_questionnaire.ui.customized_chainlit_callback import (
+    OnepointAsyncLangchainCallbackHandler,
+)
 from data_integration_questionnaire.ui.model import LoopQuestionData
 
-AVATAR = {"CHATBOT": "Chatbot", "USER": "You"}
+AVATAR = {"CHATBOT": "Chatbot", "USER": "User"}
+TOOL_NAME = "Data And Analytics Health Check"
 
 
 def display_image(image_path: str, alt: str, title: str):
@@ -91,9 +105,9 @@ async def process_questionnaire(settings: cl.ChatSettings):
     question_per_batch: int = int(settings[QUESTION_PER_BATCH])
     initial_question: str = settings[INITIAL_QUESTION]
     initial_message = f"""
-# Data And Analytics Health Check
-{display_image('main_image.png', 'Data Integration Questionnaire', 'Data Integration Questionnaire')}
-Welcome to the **Onepoints's data integration** questionnaire
+# {TOOL_NAME}
+{display_image('main_image_simple.png', TOOL_NAME, TOOL_NAME)}
+Welcome to the **{TOOL_NAME}** !
 """
     await setup_avatar()
     initial_questions: BestPracticesQuestions = ask_initial_question(initial_question)
@@ -132,7 +146,7 @@ Welcome to the **Onepoints's data integration** questionnaire
     advisor_chain = chain_factory_advisor()
     advices: BestPracticesAdvices = await advisor_chain.arun(
         prepare_questions_parameters(merged_questions, False),
-        callbacks=[OnepointAsyncLangchainCallbackHandler()]
+        callbacks=[OnepointAsyncLangchainCallbackHandler()],
     )
     logger.info("Advices: %s", advices)
     await display_advices(advices)
@@ -141,7 +155,7 @@ Welcome to the **Onepoints's data integration** questionnaire
 
 
 async def generate_multiple_batches(
-    number_of_batches, question_per_batch, merged_questions
+    number_of_batches: int, question_per_batch: int, merged_questions: Questionnaire
 ):
     for batch in range(number_of_batches):
         loop_question_data = LoopQuestionData(
@@ -163,8 +177,12 @@ async def loop_questions(loop_question_data: LoopQuestionData):
     question_start_number = (
         loop_question_data.batch_number * loop_question_data.question_per_batch
     )
-    await loop_clarifications(loop_question_data)
-    await cl.Message(content=loop_question_data.message, author=AVATAR["CHATBOT"]).send()
+    if loop_question_data.questionnaire_has_questions:
+        await loop_clarifications(loop_question_data)
+    if loop_question_data.message and len(loop_question_data.message):
+        await cl.Message(
+            content=loop_question_data.message, author=AVATAR["CHATBOT"]
+        ).send()
     for i, question_answer in enumerate(loop_question_data.questionnaire.questions):
         message = (
             f"Question {int(i + 1 + question_start_number)}: {question_message_factory(question_answer)}"
@@ -177,7 +195,6 @@ async def loop_questions(loop_question_data: LoopQuestionData):
             author=AVATAR["CHATBOT"],
         ).send()
         question_answer.answer = response
-        
 
 
 async def loop_clarifications(loop_question_data: LoopQuestionData):
@@ -213,21 +230,38 @@ async def generate_execute_primary_questions(
     initial_chain = chain_factory_initial_question()
     await cl.Message(content="").send()
     initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
-        input,
-        callbacks=[OnepointAsyncLangchainCallbackHandler()]
+        input, callbacks=[OnepointAsyncLangchainCallbackHandler()]
     )
     best_practices_questionnaire: Questionnaire = await questionnaire_factory(
         initial_best_practices_questions
     )
 
-    questions_length = len(initial_best_practices_questions.questions)
-    loop_question_data.message = f"""
-We have generated {questions_length} question{'s' if questions_length > 1 else ''} to better understand your concerns.
-Here you go:
-"""
+    # Check if there are questions
+    await check_has_questions(loop_question_data, first_qa.answer["content"])
+
+    loop_question_data.message = ""
     loop_question_data.questionnaire = best_practices_questionnaire
     await loop_questions(loop_question_data)
     return best_practices_questionnaire
+
+
+async def check_has_questions(loop_question_data: LoopQuestionData, answer_str: str):
+    sentiment_chain = sentiment_chain_factory()
+    logger.info("answer_str: %s", answer_str)
+    response_tags: ResponseTags = await sentiment_chain.arun(
+        {"answer": answer_str}, callbacks=[OnepointAsyncLangchainCallbackHandler()]
+    )
+    loop_question_data.questionnaire_has_questions = (
+        response_tags.has_questions and len(response_tags.extracted_questions) > 0
+    )
+    if loop_question_data.questionnaire_has_questions:
+        clarification_chain = clarification_chain_factory()
+        questions_str = "\n\n".join(response_tags.extracted_questions)
+        clarifications: Clarifications = await clarification_chain.arun(
+            create_clarification_input(questions_str),
+            callbacks=[OnepointAsyncLangchainCallbackHandler()],
+        )
+        loop_question_data.clarifications = clarifications.answers
 
 
 async def generate_execute_secondary_questions(
@@ -241,10 +275,16 @@ async def generate_execute_secondary_questions(
             questions_per_batch=loop_question_data.question_per_batch,
             include_questions_per_batch=True,
         ),
-        callbacks=[OnepointAsyncLangchainCallbackHandler()]
+        callbacks=[OnepointAsyncLangchainCallbackHandler()],
     )
     best_practices_secondary_questionnaire: Questionnaire = await questionnaire_factory(
         secondary_questions
+    )
+
+    # Check if there are questions
+    # answer_str = loop_question_data.
+    await check_has_questions(
+        loop_question_data, loop_question_data.extract_last_questions()
     )
 
     questions_length = len(best_practices_secondary_questionnaire.questions)
@@ -330,8 +370,9 @@ async def on_action(action):
 
 async def process_classification(questionnaire, quizz_input, advice_markdown):
     classification_chain = create_classification_profile_chain_pydantic()
-    res = await classification_chain.arun(quizz_input,
-                                          callbacks=[OnepointAsyncLangchainCallbackHandler()])
+    res = await classification_chain.arun(
+        quizz_input, callbacks=[OnepointAsyncLangchainCallbackHandler()]
+    )
     await cl.Message(
         content=f"Classification: {res.classification}", author=AVATAR["CHATBOT"]
     ).send()
@@ -402,30 +443,21 @@ def log_questionnaire(merged_questions: Questionnaire):
         print()
 
 
-
 from chainlit.server import app
 from fastapi import File, UploadFile
 from data_integration_questionnaire.config import cfg
 from data_integration_questionnaire.log_init import logger
 
-CODES = {
-    'OK': 'OK',
-    'ERROR': 'ERROR'
-}
+CODES = {"OK": "OK", "ERROR": "ERROR"}
+
 
 @app.post("/onepoint/best_practices")
 def upload_best_practices(file: UploadFile = File(...)):
     try:
         contents = file.file.read()
-        with open(cfg.knowledge_base_path, 'wb') as f:
+        with open(cfg.knowledge_base_path, "wb") as f:
             f.write(contents)
     except Exception as e:
         logger.exception("Could not upload file.")
-        return {
-            "code": CODES['ERROR'],
-            "message": f"Failed to upload file: {str(e)}"
-        }
-    return {
-        "code": CODES['OK'],
-        "message": f"Successfully uploaded {file.filename}"
-    }
+        return {"code": CODES["ERROR"], "message": f"Failed to upload file: {str(e)}"}
+    return {"code": CODES["OK"], "message": f"Successfully uploaded {file.filename}"}
