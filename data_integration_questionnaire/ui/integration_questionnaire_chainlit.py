@@ -60,7 +60,7 @@ from data_integration_questionnaire.ui.customized_chainlit_callback import (
 from data_integration_questionnaire.ui.model import LoopQuestionData
 
 AVATAR = {"CHATBOT": "Chatbot", "USER": "User"}
-TOOL_NAME = "Data And Analytics Health Check"
+TOOL_NAME = "Data & Analytics Self-Assessment"
 
 
 def display_image(image_path: str, alt: str, title: str):
@@ -104,26 +104,40 @@ async def process_questionnaire(settings: cl.ChatSettings):
     number_of_batches: int = int(settings[NUMBER_OF_BATCHES]) - 1
     question_per_batch: int = int(settings[QUESTION_PER_BATCH])
     initial_question: str = settings[INITIAL_QUESTION]
-    initial_message = f"""
-# {TOOL_NAME}
-{display_image('main_image_simple.png', TOOL_NAME, TOOL_NAME)}
-The {TOOL_NAME} will ask you some clarification questions and at the end we will give advice.
-"""
+
     await setup_avatar()
+
+    initial_message = f"""
+### Hello! I will ask you a few questions about your data ecosystem. At the end, you will get recommendations and suggested courses of action.
+
+- Onepoint’s Data & Analytics Body of Knowledge is the basis for the diagnostics and recommendations.
+- If you’d like, you can ask for a copy of the results to be emailed to you.
+- This is an experimental tool. Any feedback and improvement ideas are always welcome — thank you!
+Let’s get started.
+"""
+    await cl.Message(content=initial_message, author=AVATAR["CHATBOT"]).send()
+    initial_message_enhanced = f"""
+### {initial_question}
+The graphic below may help with your response — it captures some of the most common data and analytics challenges our clients face.
+{display_image('data_ecosystem_areas.png', TOOL_NAME, TOOL_NAME)}
+"""
+
     initial_questions: BestPracticesQuestions = ask_initial_question(initial_question)
     initial_questionnaire: Questionnaire = await questionnaire_factory(
         initial_questions
     )
 
-    await loop_questions(
-        LoopQuestionData(
-            message=initial_message,
-            questionnaire=initial_questionnaire,
-            show_sequence=False,
-            batch_number=0,
-            question_per_batch=1,
-        )
+    initial_loop_question_data = LoopQuestionData(
+        message="",
+        questionnaire=initial_questionnaire,
+        show_sequence=False,
+        batch_number=0,
+        question_per_batch=1,
     )
+    initial_loop_question_data.enhanced_question_map[
+        initial_question
+    ] = initial_message_enhanced
+    await loop_questions(initial_loop_question_data)
     merged_questions: Questionnaire = await generate_execute_primary_questions(
         LoopQuestionData(
             message="",
@@ -134,7 +148,9 @@ The {TOOL_NAME} will ask you some clarification questions and at the end we will
         )
     )
 
-    merged_questions: Questionnaire = merge_questionnaires([initial_questionnaire, merged_questions])
+    merged_questions: Questionnaire = merge_questionnaires(
+        [initial_questionnaire, merged_questions]
+    )
     log_questionnaire(merged_questions)
 
     # Generate multiple batches of questions.
@@ -200,11 +216,16 @@ async def loop_questions(loop_question_data: LoopQuestionData):
             content=loop_question_data.message, author=AVATAR["CHATBOT"]
         ).send()
     for i, question_answer in enumerate(loop_question_data.questionnaire.questions):
-        message = (
-            f"Question {int(i + 1 + question_start_number)}: {question_message_factory(question_answer)}"
-            if loop_question_data.show_sequence
-            else question_message_factory(question_answer)
-        )
+        logger.info('loop_question_data.enhanced_question_map: %s', loop_question_data.enhanced_question_map)
+        logger.info('question_answer.question: %s', question_answer.question)
+        if question_answer.question in loop_question_data.enhanced_question_map:
+            message = loop_question_data.enhanced_question_map[question_answer.question]
+        else:
+            message = (
+                f"Question {int(i + 1 + question_start_number)}: {question_message_factory(question_answer)}"
+                if loop_question_data.show_sequence
+                else question_message_factory(question_answer)
+            )
         response = await cl.AskUserMessage(
             content=message,
             timeout=cfg.ui_timeout,
