@@ -229,7 +229,7 @@ async def setup_avatar():
     ).send()
     await cl.Avatar(
         name=AVATAR["USER"],
-        url="/public/images/blank-profile-picture-973460_300.webp",
+        url="/public/images/User_icon_512.png",
     ).send()
 
 

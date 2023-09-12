@@ -5,7 +5,7 @@
 5. Remove:
 "We have generated 2 questions to better understand your concerns.
 Here you go:"
-6. "We will ask you some clarification questios and at the end we will give advice."
+6. "We will ask you some clarification questions and at the end we will give advice."
 7. Only if there is a question we will show the answers to the question.
 8. "Call to action before the email question"
 9. Change the email
