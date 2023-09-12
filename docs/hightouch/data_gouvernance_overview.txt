@@ -1,0 +1,101 @@
+Overview
+Enterprises rely on Hightouch to prepare and activate data from a central data store to
+platforms and tools across the business, including CRMs, ad platforms, support tools, and
+more. As you integrate more tools and platforms with your data warehouse, the value your
+data provides increases, but so does the complexity of your Hightouch instance.
+Additionally, you may need to provide many stakeholders access to Hightouch, from data
+engineers to marketers to revenue operations administrators. Each of these team members
+should have differentiated access and permissions. For example, you may want only your
+data engineers to have the ability to configure credentials to your data warehouse,
+marketers only be able to access configurations that power your marketing campaigns, and
+only revOps have access to CRM configurations.
+Hightouch's governance features empower businesses to organize their Hightouch instance,
+control access and permissions regardless of their team size, and manage changes securely
+and scalably.
+
+Workspace organization
+Before going in-depth into Hightouch's governance features, it's helpful to understand the
+core concepts Hightouch uses to structure access and change management.
+An is the parent “container” that represents you as a Hightouch customer. It
+contains any number of Hightouch workspaces. A is a Hightouch instance that
+users log into to use the Hightouch platform. On , you can create as many
+workspaces as you need. Depending on your business's structure, you may create different
+workspaces for different regions and brands or for separating testing and production
+environments.
+
+Each workspace has its own users and resources. A user is an individual with access to a
+workspace. A user can be associated with one or more workspaces. A resource is any of the
+building blocks of a workspace: data sources, destinations, models, syncs, and audiences.
+
+Within the Hightouch dashboard, you can use and to organize and find your
+models and syncs, whether you have a couple dozen or a couple thousand. For instance, you
+can use folders to organize resources by department or structure your marketing
+campaigns by their place in the marketing funnel. You can save groups of filters as a to
+access them more easily later.
+
+Access management
+As organizations scale, it becomes imperative to streamline access and permissions.
+Otherwise, organization and workspace admins can become overloaded by requests to
+invite users or tweak their permissions. Hightouch's is easily
+customizable and scalable to hundreds of users collaborating within an organization.
+"To organize permissions for users, you can create and assign custom roles. A role is a set of
+organization members with similar access to resources. For example, you could create a
+"Marketing" role with access to marketing and advertising platforms or a “Data team” role
+with access to data sources and models. A user can be assigned to multiple roles.
+
+Any role you create are custom except for the organization admin role, which has full access
+to all workspaces and resources in their organization. The organization admin role is the only
+role that can manage (single-sign-on), billing, and other user groups.
+To address access requests more scalably, organization admins don't assign permissions to
+individual users. Instead, users inherit their permissions from the roles they belong to. The
+permissions you can grant a role are highly granular—down to the specific resources and
+actions a role can perform on those resources. For example, your "Marketing" role could have
+full read-write access to ad platforms and audiences in Customer Studio, but read-only
+permissions to data sources, models, and other destination types.
+
+Roles integrate seamlessly with SSO. Hightouch supports SSO via third-party identity
+providers (IdP), such as Okta and Azure Active Directory. You configure SAML SSO to
+Hightouch on an organizational level and then provide access to specific workspaces and
+resources by mapping groups in your IdP to roles you've created in Hightouch. Hightouch also
+supports automatic provisioning via System for Cross-domain Identity Management (SCIM).
+
+Change management
+As your Hightouch usage scales across regions, business units, and teams, managing
+change management and auditability within Hightouch becomes essential.
+Hightouch is the only vendor in the market that natively supports . This feature
+requires that designated roles seek approval from an admin group before making
+configuration changes. For instance, if a "draft contributor" creates a new audience,
+Hightouch would prompt them to save the audience configuration in draft mode and notify
+the admin group for final approval and deployment.
+
+Hightouch’s and Deployments feature allows you to designate specific
+workspaces as "staging," "production," or whatever environments your organization requires.
+You can then link and deploy resources between environments.
+
+Suppose you are experimenting with changes to a CRM sync configuration in your staging
+environment. Once the configuration is correct, you can deploy it to your production
+environment. Before copying the configuration to a new sync in production, Hightouch
+checks that the underlying resources match the linked counterparts in production.
+
+Separating environments minimizes the risk of accidental changes or disruptions to the user-
+facing experience. For example, using environments can help avoid overwriting CRM data
+
+you didn't mean to or activating a marketing campaign prematurely.
+Keeping resources separate lets you create as many as you want—usually in a development
+environment—without cluttering other environments. And since changes don't automatically
+deploy to linked resources, you can safely delete or update resources without worrying
+about knock-on effects in other environments. Each resource also has its own history, which
+you can inspect by examining its activity history and . These are immutable, so you
+can be confident in their accuracy.
+
+Hightouch offers audit logs so workspace admins can see what actions users took in-app
+and when. Suppose someone notices that a sync has sent incorrect data to a destination. A
+workspace admin can use audit logs to review changes made to the sync before the
+incorrect data began to appear. The admin can correct the issue and—if necessary—alter
+role permissions to avoid future incidents.
+
+Summary
+Hightouch is the industry leader in governance features for reverse ETL and composable
+CDPs. Since our founding, we’ve invested heavily in observability and secure and scalable
+permissioning. These investments allow you to protect your business systems, streamline
+internal processes, and enable more teammates to embrace a data-first mindset securely.

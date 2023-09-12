@@ -1,0 +1,138 @@
+What is data integration? The Ultimate Guide
+Data is all around us. It’s in every system and application we use; collecting in databases and in the cloud. The term “data silos” gets tossed around a lot, but what does it actually mean?
+
+What is data integration?
+Picture a bunch of grain silos out on a farm. Each silo is holding useful stuff, but that stuff is locked away, completely separated from the stuff in the other silos. Data silos are just like that. Data silos are really just data from different, separate sources. And data integration involves eliminating the silos and bringing these separate data sources together.
+
+Without a single source of truth for your data, it’s hard to gain value from it. But when we consolidate data from different sources, it can become a source of valuable business insight. When we can see all of the data from an organization in a single, unified view, we can use it to make better business decisions.
+
+Silos
+Who needs data integration?
+Data integration isn’t just for large enterprises. At this point, just about every organization can benefit from a data integration strategy, because every single business needs to be able to use its data to compete effectively. Most businesses use multiple applications to support their business, such as CRMs, accounting applications, and asset management systems, and even standard spreadsheet software. Data is locked in silos in each of these applications, which can result in disconnects and miscommunications between departments or processes. If important decisions are based on misinformation resulting from these disconnects, the results will be less than optimal or even detrimental to a business.
+
+Types of data integration
+There are several different approaches to data integration.
+ 
+
+Database warehouse
+Data warehousing
+Data warehousing is a type of data integration that involves using a data warehouse to cleanse, format, and store data. Data warehousing is one of many integration systems that is used to deliver insight to an organization by allowing analysts to compare data consolidated from multiple heterogeneous sources.
+
+Middleware
+Middleware data integration
+Middleware data integration is a data integration system that involves using a middleware application as a go-between, moving data between source systems and the central data repository. The middleware helps to format and validate data before sending it to the repository, which might be a cloud data warehouse or a database.
+
+Consolidation2
+Data consolidation
+Data consolidation involves the combining of data from multiple systems to create a single data source. ETL software is often used to support data consolidation.
+
+App 1
+Application-based integration
+Application-based integration involves using software to find, extract, and integrate data. During integration, the software processes the data so that data sets from different source systems are compatible with one another and with the destination system.
+
+Data virtualization
+When using a virtualization approach, users can gain a near real-time, consolidated view of data via a single interface, even though the data remains in separate source systems.
+
+DOWNLOAD EBOOK
+How does data integration work?
+Data integration includes several key steps. The first step, referred to as data ingestion, involves moving data out of each source system and into a central location. Cloud data warehouses or data lakes are often used for this purpose.
+
+Many organizations use data integration solutions for the ingestion phase, such an ETL tool. ETL stands for extract, transform, and load data. This means:
+
+Extract
+It extracts the data from the source system. The ETL tool connects to data sources using pre-built connectors or by querying the source API.
+
+Transform
+It transforms the data to ensure consistency at its destination, regardless of its origin. This transformation typically includes changing the data’s format; standardizing values such as currencies, units of measurement, and time zones; enriching and validating the data to eliminate missing values and duplicates; and applying business rules.
+
+Load full
+The tool then loads the data into the destination system, where it can be used for analytics and reporting. A data loader can also be used in this phase.
+
+Modern ETL tools actually take an ELT approach: Extracting and loading data into the cloud, and then transforming it, taking advantage of speed and scalability of the cloud platform. The ETL process must be repeated frequently to ensure that the central source of data is always up to date.
+
+Some data integration software is designed to capture streaming data and integrate with data platforms to support real-time data pipelines, so that data in the central location is constantly refreshed and so that analysts and data scientists have access to the required data.
+
+Why is data integrity important
+Data integrity has become increasingly important as we generate an increasing volume of data. Data integrity is about making sure that your data is recorded and preserved as you intended it to be. And that when you go searching for data, the data set you get is the data set you wanted and expected.
+
+When businesses use analytics tools to inform their business decisions, it’s especially important to be able to trust the data that’s being fed into analytics processes so that you can trust the results. When you put good data in, you get reliable results out.
+
+Maintaining a centralized view of all of your data in a single location, such as a cloud data warehouse, can help with data integrity. Data integration efforts actually help improve the quality and integrity of data over time. As data is moved into the central location, data transformation processes can identify data quality issues and improve the quality and integrity of your data. 
+
+Challenges of data integration
+While data integration can be hugely beneficial for businesses, there are also some challenges.
+
+Data volumes are growing exponentially.
+Our systems are producing more data than ever. If you’re going to integrate all of your data, you have to have a scalable place to put it. It’s no longer cost-effective to continue adding physical infrastructure to support the growing data volumes. A cloud data warehouse provides the flexibility and scalability to support today’s massive volumes of data.
+
+Integrating data from disparate sources into a central repository can be time-consuming and resource-intensive.
+A modern, cloud-native ETL solution makes the enterprise data integration process simple, scalable, and speedy. A SaaS-based data loading solution also saves significant time throughout the data migration and data integration processes. If you use a solution that provides native connections to popular data sources and support for modern cloud data warehouses, you can easily create data pipelines without having to write code, saving valuable developer resources.
+
+Enterprise data integration and ETL solutions can be complex to deploy and use.
+Getting started with an enterprise data integration solution can be an intimidating task. This is especially true for larger organizations that have distributed data silos, no single source of truth for data, and the need for multiple business units to have self-serve access to data for analysis. Enterprises that want to make data accessible for everyone need a data integration strategy that ensures data governance and meets security requirements while making the enterprise data integration process simple and scalable. Using a cloud-based tool can give you the processing power you need to extract, load, and transform your data with unprecedented simplicity, speed, scale, and savings.
+
+Integrating new and different data types can be challenging.
+There are increasing numbers of data types, many of which are generated by systems such as IoT devices or sensors. It’s essential to have a flexible integration strategy so that you can integrate these new and emerging data types, and then take advantage of the insights you can get from the data coming out of these systems.
+
+DOWNLOAD EBOOK
+Benefits of using a data integration solution
+Using a data integration solution such as an ETL tool can yield numerous benefits.
+
+Eliminates data silos
+ETL software breaks down data silos and make it easier for your data scientists to access and analyze data, and then turn it into business intelligence and insights. In short, ETL tools are the first essential step in the data warehousing process that eventually lets you make more informed decisions in less time.
+
+Improves collaboration
+Your employees are scattered across different departments and sometimes different physical locations. When everyone can access a unified view of the data from the entire organization, it’s easier to collaborate across departments and across locations.
+
+Increases efficiency
+When every employee who needs access to data can get what they need quickly,companies can achieve significant efficiency increases. Just think of how much time employees spend on spreadsheets alone. If employees no longer have to manually gather the data they need, they can operate with greater speed and efficiency.
+
+Eliminates hand-coding
+Maybe you’ve had developers manually coding integrations. This code can be time-consuming to create and maintain. When you use the right data integration tools, you can virtually eliminate hand-coding and get your developers back to more high-value tasks, such as creating applications for employees or new product features for your customers.
+
+Reduces errors
+Running reports is a challenging job.There’s a lot of data in every organization and it’s constantly growing and changing. Without a central data repository, employees tasked with reporting have a tough job manually gathering all of the data sets they need to run their reports. If data is missing, outdated, or flawed, their reports will be inaccurate. When you have a data integration solution in place that’s always up to date, your employees are always accessing the latest and most accurate data.
+
+Improves data quality and integrity
+As you continue to use a data integration solution , it can actually improve your organization’s data quality and integrity over time. Consistently applying data transformation processes can help identify issues with your data and lead to improvements in quality and integrity.
+
+ 
+
+Features to look for in data integration tools
+If you’re in the market for a data integration tool, look for one that:
+
+Supports flexible pipelines
+A modern ETL process lets you decide whether to transform data after or before loading it to the target data warehouse – or both. For example, you might choose to use the power of cloud-based data warehousing for tasks like joins and complex calculations, then perform enrichment and privacy transformations during runtime. Adapting your data pipeline to make the most sense for your particular needs ensures high performance, especially for modern data scenarios such as business intelligence, artificial intelligence, and machine learning.
+
+Provides numerous integrations
+It’s essential that your ETL solution connects easily with all of the applications your organization uses. Look for a solution that supports integration with leading cloud data warehouse providers, as well as access to an extensive list of pre-built data source connectors to on-premises and cloud databases, SaaS applications, documents, and NoSQL sources. A universal API for custom integrations is also a highly desirable feature.
+
+Includes a built-in job scheduler
+Use an ETL product or data loader with a built-in job scheduler. One benefit of this function is that you don’t have to rely on a third-party source or other mechanism to launch your ETL jobs, so you can centrally manage your ETL job schedules, making processes easier to maintain, debug, and monitor. Another benefit of having a built-in job scheduler is that you can take advantage of dependency management. Parent jobs can be scheduled to trigger child jobs. You can then turn jobs into components and reuse them, saving development time and making job management that much simpler.
+
+Includes job triggers
+Matillion ETL lets you create both Orchestration Jobs (the E and L of ETL) and Transformation Jobs (the T). Within the product, you can have Orchestration Jobs trigger either other Orchestration Jobs or Transformation Jobs. You can also put conditional statements in place to deal with error handling and notifications.
+
+Provides an intuitive interface
+The last thing you need is a clunky integration tool that’s hard to learn and use. Your data integration tools should provide an intuitive GUI that makes it easy to get up and running quickly.
+
+DOWNLOAD EBOOK
+Want to learn more about data integration?
+Given the increasing volume and complexity of data, and the speed and scale needed to handle it, the only place you can compete effectively—and cost-effectively—is in the cloud.
+ 
+
+Data analyst
+Matillion provides a complete data integration and transformation solution that is purpose-built for the cloud and cloud data warehouses.
+
+ETL
+Only Matillion is purpose-built for Amazon Redshift, Google BigQuery, Azure Synapse Analytics, and Snowflake, enabling businesses to achieve new levels of simplicity, speed, scale, and savings.
+
+Future Proof
+Trusted by companies of all sizes to meet their data integration and transformation needs, Matillion products are highly rated across the AWS, Google Cloud, and Microsoft Azure Marketplaces.
+
+Request a demo to learn more about how you can unlock the potential of your data with Matillion’s cloud-based approach to data transformation.
+
+ 
+
+Let Us Help You Build Your Data Integration Strategy
+Matillion ETL is data transformation for cloud data warehouses. As a cloud-native solution deployed into your cloud infrastructure, Matillion leverages the speed and scale of the cloud to consolidate large data sets and quickly transform your data to make it analytics ready.

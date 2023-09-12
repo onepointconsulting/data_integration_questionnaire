@@ -11,11 +11,6 @@ class BestPracticesQuestions(BaseModel):
         description="The list of questions given used to enforce best practices.",
     )
 
-    answers: Optional[List[str]] = Field(
-        ...,
-        description="Answers to any questions from the user answers.",
-    )
-
     def __str__(self) -> str:
         return "\n".join(self.questions)
 
@@ -56,5 +51,5 @@ class ResponseTags(BaseModel):
 class Clarifications(BaseModel):
     answers: Optional[List[str]] = Field(
         ...,
-        description="Answers to any questions from mthe user answers.",
+        description="Answers to any questions from the user answers you can find in the text.",
     )

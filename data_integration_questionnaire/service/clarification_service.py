@@ -19,7 +19,6 @@ prompts = read_prompts_toml()
 
 section = prompts["clarifications"]
 
-
 def prompt_factory_clarifications() -> ChatPromptTemplate:
     human_message = section["human_message"]
     prompt_msgs = [
@@ -34,6 +33,12 @@ def prompt_factory_clarifications() -> ChatPromptTemplate:
                 input_variables=[INPUT_VAR_QUESTIONS],
             )
         ),
+        HumanMessagePromptTemplate(
+            prompt=PromptTemplate(
+                template=prompts["general_messages"]["tip_language"],
+                input_variables=[],
+            )
+        )
     ]
     return ChatPromptTemplate(messages=prompt_msgs)
 

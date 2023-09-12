@@ -1,5 +1,6 @@
 [general_messages]
 tip_correct_format = "Tip: Make sure to answer in the correct format"
+tip_language = "Tip: Please make sure that you write all your answers in British English."
 
 [general_settings]
 number_of_batches = 2
@@ -120,7 +121,6 @@ The pre-filled questionnaire starts with ==== CUSTOMER QUESTIONNAIRE START ==== 
     system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and on an answer to a question answered by a customer, \
 please generate {questions_per_batch} questions that are helpful to this customer to solve data integration and gouvernance issues.
-In case you detect any questions in the user answer, please also provide some answers based on your knowledge.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
 The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
 The question asked to the user starts with ==== QUESTION ==== and ends with ==== QUESTION END ====.
@@ -139,10 +139,9 @@ The user answer provided by the customer starts with ==== ANSWER ==== and ends w
 ==== ANSWER END ====
 """
     [flexible_qustionnaire.secondary]
-    system_message = "You are a data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
+    system_message = "You are a British data integration and gouvernance expert that can ask questions about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and answers to multiple questions answered by a customer, \
 please generate {questions_per_batch} questions that are helpful to this customer to solve data integration and gouvernance issues.
-In case you detect any questions in the user answers, please also provide some answers based on your knowledge.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
 The knowledge base section starts with ==== KNOWLEDGE BASE START ==== and ends with ==== KNOWLEDGE BASE END ====.
 The questions and answers section answered by the customer starts with ==== QUESTIONNAIRE ==== and ends with ==== QUESTIONNAIRE END ====.
@@ -161,7 +160,7 @@ The user answers are in the section that starts with ==== ANSWERS ==== and ends 
 ==== ANSWERS END ====
 """
     [flexible_qustionnaire.advisor]
-    system_message = "You are a data integration and gouvernance advisor that gives advice about data integration and gouvernance to help a customer with data integration and gouvernance problems"
+    system_message = "You are a British data integration and gouvernance advisor that gives advice about data integration and gouvernance to help a customer with data integration and gouvernance problems"
     human_message = """Based on the best practices and knowledge base and answers to multiple questions answered by a customer, \
 please generate a series of advices that are helpful to this customer to solve data integration and gouvernance issues.
 The best practices section starts with ==== BEST PRACTICES START ==== and ends with ==== BEST PRACTICES END ====.
@@ -197,4 +196,5 @@ human_message = """Given this input that starts with === INPUT START === and end
 === INPUT START ===
 {questions}
 === INPUT END ===
-can you please answer all questions you see in it?"""
+can you please answer all questions you see in it?
+Please be concise and limit your replies to around 30 words if possible."""

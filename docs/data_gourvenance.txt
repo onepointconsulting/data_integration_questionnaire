@@ -1,0 +1,63 @@
+Why your modern data stack needs data governance
+Having a governance strategy gives you data control and visibility.
+
+This is part 3 of a series on data governance. Read part 1 on the business value of data governance and part 2 on the key dimensions of data governance.
+
+Bringing data control and visibility across the tech stack allows organizations to discover new trends and gain increased capabilities from data insights. And having all your data in one place gives your organization the ability to assign robust security measures for sensitive data. 
+
+You can delegate access and turn on or off that data access with the flip of a switch. Employee and client onboarding and offboarding become a streamlined process. Understanding how datasets move across complex pipelines gives end-users confidence in the data delivered in reporting, analysis and decision making.
+
+This marriage of data control and data visibility is called data governance. Data governance and democratizing data are two sides of the same coin. By increasing usage and spread of the data to people within your organization, people of the company will work together to improve the quality of our data assets. 
+
+While data governance is beneficial for business, it’s also challenging to do it right.
+
+It always comes back to frameworks
+To successfully implement a data governance strategy, you need a framework, a set of guidelines for action. Frameworks are nothing new: We use them in our everyday lives, whether we’re obeying the traffic lights and following the rules of the road, using the scientific method in the lab or even writing a compelling story. As a standard in software development, frameworks save time, reduce the risk of mistakes and have the benefit of having been already tested. 
+
+To help enterprises identify and protect data assets, data governance frameworks are designed to incorporate many technologies across the modern data stack. This is to control data and increase data visibility — including data catalogs, data monitoring, and data lineage.
+
+A common approach to data and analytics governance is to create a data governance function with:
+
+Leadership buy-in
+Ownership across departments for data owners and stewards
+A dictatorial process to manage data assets
+While the core pillars — ownership, delegation, enforcement — are needed for any organization large or small, establishing effective data management requires a combination of people, processes and technology — and an agile mindset. 
+
+A framework that supports and encourages agile versus waterfall data governance implementation helps ensure successful implementation and ongoing success. Start with a minimum viable solution that will be developed and improved through experience. This method yields greater long-term benefits.
+
+When designing your minimum viable solution, focus on positive business outcomes that are both short and long term so your organization has a good foundation for delivering the value, scale and speed modern business demands. 
+
+An agile mindset combined with iterative learning will encourage healthy discourse among core practitioners. As the number of agile practitioners grows within your organization, the mindset will likely get adopted by all employees. 
+
+Attainable goals lead to radical results. Push for educational resources and employee training. Do this to democratize data — but also to share the understanding that it’s everyone’s responsibility to improve data quality.
+
+Extending your data governance strategy to your data pipelines
+Many enterprises lack an understanding of data in-flight, which is the data moving from source to destination. Increased data regulation means data teams must have granular control over who is accessing and loading their data. 
+
+Extract, load, transform (ELT) centralizes disparate sources and puts them into a clean, structured format for modern data destinations. ELT has the added benefit of intangibles such as automatic schema migration, idempotency and easy-to-query data. 
+
+Now, Fivetran is taking the next step in data governance by handing over to enterprise organizations refined data control and data visibility features so they can manage their data in-flight.
+
+
+The goal is to make data governance accessible to data teams in practical implementations. By having an easy-to-use strategy within your Fivetran pipelines, enterprises can make onboarding easier and spread data to teams quickly in a safe, secured process. 
+
+What does this process look like from 50,000 feet? Here is a map of the data control and data visibility features across the Fivetran pipelines.
+
+
+Fivetran takes a plug-in data governance approach to simplify data governance implementation in your enterprise. 
+
+Here are some common use cases: 
+
+Authorize access to data
+Free your time by delegating data workflows and empower your distributed teams to access and work with the right data safely and securely, so you will never over-permission again. Granular permissions with out-of-the-box and custom roles can be assigned to new users using SCIM integration (with Okta and Azure AD coming soon), for secure and scalable user lifecycle management.
+
+End-to-end data visibility
+Drive your business forward by understanding what data you have, how it changes and how it’s used to build reliable, high-quality data sets. Soon, you will be able to share metadata about your data in-flight with your data catalog of choice, including Alation and Collibra. 
+
+Control without constraint
+Foster data culture with trust by enabling your team to have access to everything they need — while ensuring you are protecting the data others shouldn’t access. Team-level permissioning enables you to set permissions for a group of users. This can be used to limit access to connectors and destinations that are applicable. You can even limit access to PII, with tagging and universal column masking. 
+
+Users can better understand and control their data by sharing metadata with other tools, supporting the enforcement of policy and compliance rules on integrated data, and driving ownership and accountability of data.
+
+Final thoughts
+In the same way that enterprises simplify data integration with data pipelines, businesses can simplify and automate data governance. Enterprises can set up data governance in a controlled, efficient and insightful way — with increased data control and visibility across the modern data stack. Data governance drives an understanding of the challenges data teams face. It also promotes needed support and trust from the organization. Ultimately, data governance leads to a data-driven organization that will continue to compete in the modern marketplace.

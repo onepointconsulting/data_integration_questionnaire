@@ -107,7 +107,7 @@ async def process_questionnaire(settings: cl.ChatSettings):
     initial_message = f"""
 # {TOOL_NAME}
 {display_image('main_image_simple.png', TOOL_NAME, TOOL_NAME)}
-Welcome to the **{TOOL_NAME}** !
+The {TOOL_NAME} will ask you some clarification questions and at the end we will give advice.
 """
     await setup_avatar()
     initial_questions: BestPracticesQuestions = ask_initial_question(initial_question)
@@ -134,7 +134,7 @@ Welcome to the **{TOOL_NAME}** !
         )
     )
 
-    merged_questions = merge_questionnaires([initial_questionnaire, merged_questions])
+    merged_questions: Questionnaire = merge_questionnaires([initial_questionnaire, merged_questions])
     log_questionnaire(merged_questions)
 
     # Generate multiple batches of questions.
@@ -148,6 +148,22 @@ Welcome to the **{TOOL_NAME}** !
         prepare_questions_parameters(merged_questions, False),
         callbacks=[OnepointAsyncLangchainCallbackHandler()],
     )
+
+    # Check if there are questions
+    loop_question_data = LoopQuestionData(
+        message="",
+        questionnaire=merged_questions,
+        show_sequence=False,
+        batch_number=0,
+        question_per_batch=question_per_batch,
+    )
+    await check_has_questions(
+        loop_question_data, loop_question_data.extract_last_questions()
+    )
+    if loop_question_data.questionnaire_has_questions:
+        await loop_clarifications(loop_question_data)
+
+    # Show advices
     logger.info("Advices: %s", advices)
     await display_advices(advices)
     await generate_display_pdf(advices, merged_questions)
@@ -198,13 +214,12 @@ async def loop_questions(loop_question_data: LoopQuestionData):
 
 
 async def loop_clarifications(loop_question_data: LoopQuestionData):
-    clarifications = loop_question_data.questionnaire.clarifications
+    clarifications = loop_question_data.clarifications
     if clarifications:
-        msg_id = await cl.Message(content="#### Clarifications\n").send()
         clarifications_str = ""
         for c in clarifications:
             clarifications_str += f"- {c}\n"
-        await cl.Message(content=clarifications_str, parent_id=msg_id).send()
+        await cl.Message(content=clarifications_str).send()
 
 
 async def setup_avatar():
@@ -287,12 +302,8 @@ async def generate_execute_secondary_questions(
         loop_question_data, loop_question_data.extract_last_questions()
     )
 
-    questions_length = len(best_practices_secondary_questionnaire.questions)
     loop_question_data.questionnaire = best_practices_secondary_questionnaire
-    loop_question_data.message = f"""
-We have generated {questions_length} more question{'s' if questions_length > 1 else ''} to get a better understanding.
-Here you go:
-"""
+
     await loop_questions(loop_question_data)
     return best_practices_secondary_questionnaire
 

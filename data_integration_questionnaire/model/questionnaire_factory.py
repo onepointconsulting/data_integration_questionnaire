@@ -18,5 +18,5 @@ async def questionnaire_factory(generated_questions: BestPracticesQuestions) -> 
             question_answer.image_title = q['image_title']
             question_answer.image_alt = q['image_alt']
         question_answers.append(question_answer)
-    return Questionnaire(questions=question_answers, clarifications=generated_questions.answers)
+    return Questionnaire(questions=question_answers, clarifications=[])
 

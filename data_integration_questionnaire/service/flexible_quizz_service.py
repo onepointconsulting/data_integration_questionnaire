@@ -35,6 +35,7 @@ def read_best_practices() -> str:
 
 
 human_message_correct_format = prompts["general_messages"]["tip_correct_format"]
+human_message_tip_language = prompts["general_messages"]["tip_language"]
 best_practices = read_best_practices()
 knowledge_base = prompts["data_sources"]["knowledge_base"]
 
@@ -65,6 +66,12 @@ def prompt_factory_generic(
         HumanMessagePromptTemplate(
             prompt=PromptTemplate(
                 template=human_message_correct_format,
+                input_variables=[],
+            )
+        ),
+        HumanMessagePromptTemplate(
+            prompt=PromptTemplate(
+                template=human_message_tip_language,
                 input_variables=[],
             )
         )
@@ -180,10 +187,6 @@ if __name__ == "__main__":
         res = chain.run(input)
         for q in res.questions:
             logger.info(q)
-        if res.answers:
-            logger.info('There are answers:')
-            for a in res.answers:
-                logger.info(a)
 
     primary_test()
 

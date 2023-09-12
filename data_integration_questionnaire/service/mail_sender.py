@@ -29,6 +29,7 @@ MIME-Version: 1.0
 Content-type: text/html
 Subject: {quizz_title}
 
+<a href="https://www.onepointltd.com"><img src="https://www.onepointltd.com/wp-content/uploads/2020/06/logo-one-point.png" alt="Onepoint Consulting Ltd" /></a>
 {questionnaire_summary}
 
 """

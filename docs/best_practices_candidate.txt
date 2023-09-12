@@ -1,0 +1,58 @@
+1. No code/ Low Code
+Capability: There are more and more tools that are emerging in market making it easier to do data integration between systems without writing any code and use out of box connectors. 
+The vast array of connectors gives organization agility to integrate with systems. 
+Some of the most popular connectors include snowflake and salesforce connectors besides database connectors. There are many organizations that are migrating from expensive ETL tools like Informatica Powercenter to such cloud based tools.
+Enabler: Such ease in integration gives the capability makes it easy to consume data downstream for applications and apply reverse ETL.
+
+Low code and no code tools can speed up the integration of multiple systems.
+
+2. Integration with Data Catalogue
+Capability: Are data moves across multiple systems, there is an increasing need to capture the metadata such as data lineage and exported to data catalog. 
+There is also increasing demand to visualize data lineage and discover underlying relationships to improve data literacy.
+
+Enabler: Using both data catalogues and data lineage, organizations can ensure data accuracy, implement data governance, and manage business change.
+
+Data Catalogues can help organisations to document and understand better their data, thus helping firms and companies to improved the consistency and accuracy of their data.
+
+3. CDC (Change Data Capture)
+Capability: Publish changes in data as and when changes occur. Think event instead of schedule to minimize data latency.
+
+Enabler: Minimizing data latency often leads to providing more timely transparency/visibility to business processes and thereby taking timely business decisions.
+
+Change data capture is ideal when you want the data to be kept up to date all the time. It is a powerful tool to keep data consistency and keep all data related systems synchronized.
+
+4. Open Source Abstraction on Compute Engine
+
+Since organization have compute engines such as snowflake and databaricks already in their tech stack, there is a need to either use those compute engines for ETL operations or use an abstraction later top of these compute engines. 
+Tools such as dbt (data build tool) is an open-source command-line tool that helps data analysts and engineers build data models and implement data pipelines. 
+Another open-source tool Apache SeaTunnel is among the top 10 Apache projects for data integration. Tools such as Pentaho and Talend also can be leveraged.
+
+ETL tools are ideal for building data pipelines and convert data into more suitable formats for data analysis and reporting.
+
+5. Unified Integration at scale
+
+Capability: There is an emerging trend where there is a need to do integration with a single tool whether its bulk/batch data or real time or streaming data. 
+Organizations have multiple tools for data integration where ETL us used for bulk loads, Kafka used for real time publish, Nifi for streamlining. Some of the tools are on-prem and there is trend to move these workloads and data integration capabilities on cloud. 
+
+Enabler: Having a unified platform simplifies maintainability of the integration platform.
+
+Unified Data Integration- Why the Whole is Greater Than the Sum
+Top companies now recognize the need for a more unified integration approach that combines the right technologies and managed services to deliver a more consistent and reliable view of their data across disparate applications, ultimately driving measurable business results.
+Today’s enterprise data environments can be a goldmine of insight or a quagmire of confusion depending on the company and their approach to data integration and data management. 
+Many struggle to manage a complex web of cloud applications — ironically designed to alleviate the very problems they now face with data accessibility and timeliness of delivery.
+
+6. Consider using modern data architectures like the Lakehouse platform architecture to support BI, Reports, Data Science and Machine learning
+
+We define a Lakehouse as a data management system based on low-cost and directly-accessible storage that also provides traditional analytical DBMS management and performance features such as ACID transactions, data versioning, auditing, indexing, caching, and query optimization. Lakehouses thus combine the key benefits of data lakes and data warehouses: low-cost storage in an open format accessible by a variety of systems from the former, and powerful management and optimization features from the latter.
+
+The key question is whether one can combine these benefits in an effective way: in particular, Lakehouses' support for direct access means that they give up some aspects of data independence, which has been a cornerstone of relational DBMS design.
+
+7. Identify pockets of dark data
+
+Try to find where you have unstructured data which you can use. There is a big potential in dark data, especially if you start using NLP tools and models that can convert this data into structured data.
+
+8. Consider novel forms of data infrastructure to deal with large amounts of data
+
+Edge computing moves data processing and analysis close to endpoints where data is generated, to deliver real-time responsiveness and reduce the cost associated with transferring large amounts of data. Edge computing can pre-process data, extract relevant information, and perform initial analytics locally. After this initial processing, summarized or relevant data can be sent to a data lake or edge network for further analysis, archival, and integration with historical data. Fog computing is a decentralized computing paradigm that extends cloud computing capabilities to the edge of the network, typically one or more hops away from the edge devices. It can be thought of as an intermediate layer between the edge devices and the centralized cloud. Organizations often require both real-time analytics at the edge and more extensive, historical analysis in a centralized data lake. Hybrid analytics solutions combine edge computing, fog computing with cloud or data lake-based analytics to provide a holistic view of data. It is important to conduct a thorough assessment of data lake, AI platform requirements and workloads to determine the appropriate cost effective infrastructure needs for processing power. Emergence of hybrid cloud capabilities make it a valuable tool for organizations pursuing a comprehensive data lake strategy that spans multiple environments including edge, on-premise and multiple cloud service providers. Such capabilities include a cloud-centric container platform to run computationally intensive workloads by AI/ML applications utilizing CPU’s, GPU’s at scale.
+
+Most AI/ML workloads are cloud native in nature, deployed in containers and optimized to work with GPUs. They need to co-exist with other workloads on a shared infrastructure which results in a mix of virtual machines (VMs) and containers.

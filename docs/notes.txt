@@ -1,0 +1,13 @@
+1. Welcome to the Onepoints's data integration questionnaire -> Data And Analytics Health Check
+2. Add banner on top of the UI
+3. Change the image
+4. Whatever comes from the bot is Onepoint blue.
+5. Remove:
+"We have generated 2 questions to better understand your concerns.
+Here you go:"
+6. "We will ask you some clarification questios and at the end we will give advice."
+7. Only if there is a question we will show the answers to the question.
+8. "Call to action before the email question"
+9. Change the email
+8. Change the pdf wording
+10. Tell ChatGPT to use British English.

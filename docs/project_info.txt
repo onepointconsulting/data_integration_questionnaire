@@ -1,0 +1,48 @@
+Data Integration Trends and Best Practices
+
+1.	No code/ Low Code
+Capability: There are more and more tools that are emerging in market making it easier to do data integration between systems without writing any code and use out of box connectors. The vast array of connectors gives organization agility to integrate with systems. Some of the most popular connectors include snowflake and salesforce connectors besides database connectors. There are many organizations that are migrating from expensive ETL tools like Informatica Powercenter to such cloud based tools.
+
+Enabler: Such ease in integration gives the capability makes it easy to consume data downstream for applications and apply reverse ETL.
+
+Reference: Sample white papers attached.
+
+2.	Integration with Data Catalog
+Capability: Are data moves across multiple systems, there is an increasing need to capture the metadata such as data lineage and exported to data catalog. There is also increasing demand to visualize data lineage and discover underlying relationships to improve data literacy.
+
+Enabler: Using both data catalogs and data lineage, organizations can ensure data accuracy, implement data governance, and manage business change.
+
+Reference: 
+https://www.fivetran.com/blog/why-your-modern-data-stack-needs-data-governance?_gl=1*1m2e5ld*_ga*OTI4NDQ3NzgwLjE2OTI5Njc1NTk.*_ga_NE72Z5F3GB*MTY5Mjk2NzU1OS4xLjEuMTY5Mjk2Nzk2My4zNy4wLjA.
+
+3.	CDC (Change Data Capture)
+Capability: Publish changes in data as and when changes occur. Think event instead of schedule to minimize data latency.
+
+Enabler: Minimizing data latency often leads to providing more timely transparency/visibility to business processes and thereby taking timely business decisions. 
+
+Reference: Matillion white paper on CDC
+https://www.matillion.com/guide/what-is-data-integration-the-ultimate-guide
+
+4.	Open Source Abstraction on Compute Engine
+Since organization have compute engines such as snowflake and databaricks already in their tech stack, there is a need to either use those compute engines for ETL operations or use an abstraction later top of these compute engines. Tools such as dbt (data build tool) is an open-source command-line tool that helps data analysts and engineers build data models and implement data pipelines. Another open-source tool Apache SeaTunnel is among the top 10 Apache projects for data integration. Tools such as Pentaho and Talend also can be leveraged.
+
+Reference:
+https://seatunnel.apache.org/
+https://discover.getdbt.com/
+https://aws.plainenglish.io/meet-apache-seatunnel-a-new-apache-top-level-project-7d5dfb72412
+
+5.	Unified Integration at scale
+Capability: There is an emerging trend where there is a need to do integration with a single tool whether its bulk/batch data or real time or streaming data. Organizations have multiple tools for data integration where ETL us used for bulk loads, Kafka used for real time publish, Nifi for streamlining. Some of the tools are on-prem and there is trend to move these workloads and data integration capabilities on cloud. 
+               Enabler: Having a unified platform simplifies maintainability of the integration platform.
+               Reference:
+https://resources.opentext.com/unified-platform-for-supply-chain?utm_source=chain_net&elqcampaignid=45063
+https://www.spiceworks.com/tech/big-data/articles/unified-data-integration-why-the-whole-is-greater-than-the-sum/
+Sample Prompting questions:
+1.	Does your organization support an event driven architecture for data integration?
+2.	Does your organization take more than 3 weeks for data integration between 2 systems?
+3.	Would you like to know more about capabilities that would cut down your integration cost and time spend for integration by 50%?
+4.	Does your organization export data lineage to data catalog?
+5.	How many integration engineers does your team have? 
+6.	What is the scope of integration? What is the total count of source systems? What is the total count of the destination systems?
+7.	Does your organization promote use of open source for data integration?
+
