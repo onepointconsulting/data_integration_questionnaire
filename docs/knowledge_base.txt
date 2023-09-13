@@ -15,7 +15,7 @@ Below is the list of all possible data sources and the type of data that should 
 Sources can be in differnt format (Structured such as databases, Unstructured as some documents, Semistructured in JSON format). They can be on diferent media or sourc such as streaming data, files, object stores or databases).
 Successfully extracting hiddent/dark  data can significantly improve operational insights and analytical quality, as well as improve AI/<L foundation.
 
-Category: Data Integration Trends and Best Practices(Organise and prepare)
+Categoy: Data Integration Trends and Best Practices(Organise and prepare)
 1.	No code/ Low Code
 Capability: There are more and more tools that are emerging in market making it easier to do data integration between systems without writing any code and use out of box connectors. The vast array of connectors gives organization agility to integrate with systems. Some of the most popular connectors include snowflake and salesforce connectors besides database connectors. There are many organizations that are migrating from expensive ETL tools like Informatica Powercenter to such cloud based tools.
 
@@ -77,51 +77,52 @@ Many companies now strive to share data with partners and suppliers as similarly
 Internal lines of business (LOBs) sharing 
 Within any company, different departments, lines of business and subsidiaries seek to share data so that everyone can make decisions based on a complete view of the current business reality. For example, finance and HR departments need to share data as they analyze the true costs of each employee. Marketing and sales teams need a common view of data as they seek to determine the effectiveness of recent marketing campaigns. And different subsidiaries of the same company need a unified view of the health of the business. Removing data silos — which are often established for the important purpose of preventing unauthorized access to data — is critical for digital transformation initiatives and maximizing business value of data. 
 
-Category: Data Monetization
+
+Category: Consumption use cases
+Consumption use cases for published data in a data lake refer to the various ways organizations and users can access, analyze, and derive value from the data stored in the data lake. Common consumption use cases for published data in a data lake include descriptive analytics by building dashboards and scheduling reports using BI tools. Data analysts and scientists can explore and discover new patterns, trends, and anomalies in the data on the data lake. Exploratory data analysis often involves ad-hoc querying, data profiling, and data visualization. Data scientists and machine learning engineers can access raw, enriched and published data in the data lake to build and train machine learning models, perform data exploration, and develop predictive analytics solutions. Popular tools like Jupyter notebooks, AI/ML frameworks such as TensorFlow, and PyTorch are commonly used. 
+
+Emerging use cases include building Customer 360, recommendation engines, digital twins and data monetization. Merging or joining data sets on data lakes for building a 360-degree view of customers, often referred to as "Customer 360," can provide organizations with valuable insights into their customers' behavior, preferences, and needs. Using a data lake for digital twins involves leveraging the data storage and processing capabilities of the data lake to create and manage digital representations of physical objects or systems. Digital twins are virtual replicas of real-world entities, providing a powerful framework for simulation, analysis, and monitoring. Digital twins powered by data lakes are particularly valuable in industries such as manufacturing, healthcare, energy, transportation, and construction. They enable organizations to gain a deeper understanding of their physical assets, improve operational efficiency, reduce downtime, and enhance decision-making by leveraging real-time data and simulations. 
+
+Data monetization refers to the process of generating revenue or deriving economic value from the data assets an organization possesses. In today's data-driven world, organizations accumulate vast amounts of data on the data lake, and data monetization strategies allow them to leverage this data or information or insights for financial gain or strategic advantages. 
+Data monetization offers substantial benefits, but it also presents several challenges that organizations must address such as compliance with data privacy regulations, such as GDPR and CCPA and determining the right monetization strategy and pricing model for data. Data metering, which involves measuring and tracking data usage, can help overcome some of these challenges. By providing visibility into data usage, access patterns, and data quality, organizations can make informed decisions, enforce governance policies, and ensure compliance. Additionally, data metering enables organizations to better understand customer behavior and optimize their monetization pricing strategies, leading to more successful and profitable data monetization initiatives. 
+
+Data mesh can play a significant role in driving data monetization by decentralizing ownership, emphasizing data productization, providing robust metadata and discovery capabilities, and promoting self-service access while maintaining governance and control. This approach is designed to make data more accessible, manageable, and valuable for organizations with complex data ecosystems. 
+
+Transforming a data lake into a real-time data hub involves implementing low latency event drive data pipelines for ingestion and exposing curated published datasets as a service. Securely exposing real-time data using API gateway enables users and applications to access and consume data in real time.
+
+Building conversational AI applications using a large language model (LLM) can be enhanced by integrating data from a data lake. Data lakes can serve as a valuable source of information for training and enhancing the capabilities of conversational AI models.
+
+Topic: Data Monetization
 Companies across industries are commercializing data, and this segment continues to grow across industries. Large multinational organizations have formed exclusively to monetize data, while other organizations are looking for ways to monetize their data and generate additional revenue streams. Examples of these companies can range from an agency with an identity graph to a telecommunication company with proprietary 5G data or to retailers that have a unique ability to combine online and offline data. Data vendors are growing in importance as companies realize they need external data for better decision-making.
-
 FOUR STEPS TO START YOUR DATA MONETIZATION JOURNEY
-STEP 1: IDENTIFY YOUR DATA ASSETS 
-The first order of business is to define the inventory of potentially shareable data. Information that would disclose trade secrets, otherwise jeopardize competitiveness, or run afoul of legal protections and privacy policies obviously won’t make the cut. That still leaves a wealth of possible inventory, including Operational data that includes Transaction records and sensor logs,  Commercial data that includes Industry developments, sentiment, and prices, Marketing data that includes Aggregated or de-identified customer information, preferences, web traffic,Behavioral data that includes Data captured in digital and physical environments and SaaS data that Serves the customer data that’s created by your app back to your clients Alternatively, you may have analytical information that incorporates open-source data such as social network posts or government statistics. And, last but not least, every organization has “dark data,” information that is collected as part of regular business activities but is not used or analyzed. When mined and combined with other signals, this data can provide interesting insights and be a valuable component of monetization strategies.
-COMMON TYPES OF DATA OFFERINGS The type of data offering may determine how to charge for it and how much to charge. Here are five of the most common types of data or data services you can monetize: 
-1.	Raw Data in its original form that has not been processed, analyzed, or transformed 
-2.	Packaged data product or Ready-to-consume data that includes aggregation and requires little or no analysis/transformation
-3.	Data analysis or insights using Dashboards, metrics, and indices 
-4.	Data enhancement as a service that augments customer data with additional insights 
-5.	Data trade or exchange or Using your data to pay for data access
-As you identify the types of data you own, you will have to decide whether giving access to the raw data is of value to customers or if the data needs to be combined or enhanced with additional data sets. For example, a retailer’s store-level data is valuable to suppliers as is, but they might be willing to pay a premium if that data were enriched or scored with weather and demographics data sets.
-Depending on the types of customers you have, adding a layer of analytics to the data—that is, creating specific dashboards and reports—might be exactly what they need to make better decisions, especially if they lack the expertise or resources to perform the data analysis themselves. The more insights and enrichments you add to the data, either by incorporating more data sets into the original source or through the creation of prebuilt analyses, the higher its potential value. Adding insights to a data set increases its value.
 
-STEP 2: CHOOSE A PRICING STRATEGY 
-Different methodologies exist for pricing your data, each with its own benefits. Two of the most common ways of looking at how to price your data products are cost pricing and value pricing. Cost pricing Cost pricing involves understanding your costs for data collection, storage, preparation, transformation, and sharing so you can add a percentage margin as you price your data above your costs. You should consider the following: 
-1.	Cost of data sourcing: The time and effort taken to select and extract data sets, 
-2.	Cost of data packaging: The time and effort related to preparing the data for consumption and any related augmentation or enrichment done to the data, 
-3.	Cost of data sharing: The time, effort, and other costs associated with copying, storing, and transferring data to the consumer.
-What if your goal is not to maximize data revenue, but rather to use the offering as a customer acquisition tool? In that case, you might price your data at or below cost as a loss leader, or even give some of it away for free. The size of the discount might then depend on the value of the new business sought and the expected conversion rate of prospects into clients.
-Value pricing 
-Value pricing involves looking at your data from a customer’s perspective and identifying the value it will bring. With this pricing strategy, consider the following: 
-1.	Uniqueness: Is this data unique in any way or form? 
-2.	Access restrictions: Is the data difficult for customers to access? Are there specific barriers (physical or regional data locality laws or otherwise) preventing customers from obtaining the data themselves in some other way? 
-3.	Technology and expertise: Is aggregating or using this data technically difficult? Does it require specific expertise not found in many companies? 
-4.	Market alternatives: Are there other companies already providing similar data sets? Where would customers have to go in order to acquire similar data sets and at what cost? 
-5.	Analysis and insights: Is the analysis of the data time-consuming and costly? Are customers already paying (either in consulting fees or in additional internal resources) to analyze this type of data? 
-6.	Business value: Most importantly, will this data help companies improve their business operations, performance, or customer satisfaction? Could it help them develop better products or services
-Packaging 
-The final element in the pricing analysis is what we call packaging. Determining costs and value is helpful in establishing different pricing tiers, or packages. The traditional “good, better, best” framework also applies to your data products, with the following elements to consider: 
-1.	Timeliness: How fresh is the data? Should there be options for acquiring new versus historical data sets? What about updates or corrections to previously delivered data? 
-2.	Update frequency: How often would you need to update the data? Would customers be willing to pay for more frequent updates? 
-3.	Scope: How broad is the data product and is there potential to offer segmentation or various “cuts” of a set of data by separately packaging and pricing different intersections of tables, rows, and columns? Some customers may be willing to pay a premium for larger data sets while others might be interested only in narrower data sets. 
-4.	Distribution breadth: Will you offer data products to anyone who wants to buy them, or only for certain types of buyers or use cases? Will you limit the number of parties that can buy each sleeve of data, to increase scarcity and therefore positively affect price? 
-5.	Additional services: Would adding access to analytics, prebuilt dashboards, or preconfigured schema and chart metadata for the most commonly used visualization tools make the data more attractive?
-A tiered pricing plan can help attract new users by offering data access-only plans at lower costs, while ensuring that your existing customers get the data and services they need at a cost that best fits their needs and budget. You’ll also need to decide whether to sell data by the set or by subscription, perhaps monthly or annually, or if you want to charge based on usage.
-Consider a freemium structure featuring limited teaser access for new leads, a charge for standard access, and premium fees for additional service features. Let freemium data be broad in terms of coverage scope (all geographies, for example), but limit the number of data columns, or raise the level of aggregation to leave freemium users “wanting more.”
+STEP 1: IDENTIFY YOUR DATA ASSETS
+Start by identifying your shareable data, avoiding sensitive or restricted information. Categories can include Operational, Commercial, Marketing, Behavioral, and SaaS data. Also consider "dark data," which is collected but not actively used. It can be valuable when combined with other data.
 
-STEP 3: SELECT A DISTRIBUTION CHANNEL 
-Data sellers now have a large and often bewildering array of choices for distributing data to data buyers, each with its advantages and drawbacks. Traditional methods include: 
-1. Doing a direct data transfer (for example via SFTP or Amazon S3) 
-2. Using a third-party data broker 
-3. Using a data marketplace 
-4. Use an open protocol over HTTPS such as delta sharing
+COMMON TYPES OF DATA OFFERINGS
+You can monetize different forms of data:
+
+Raw Data
+Packaged data products
+Analysis via dashboards
+Data enhancement services
+Data trade or exchange
+Assess if raw data suffices for your clients or whether combining or enhancing it with additional data sets adds value. For instance, retailers' data could be enriched with weather and demographics to create a premium offering. Adding layers of analytics increases the data's potential value.
+
+STEP 2: CHOOSE A PRICING STRATEGY
+Two main approaches for pricing your data products are cost pricing and value pricing.
+
+Cost Pricing:
+Consider the cost of sourcing, packaging, and sharing the data. Factor these costs into your pricing, adding a profit margin. Alternatively, you might offer data below cost as a customer acquisition tool.
+
+Value Pricing:
+From a customer’s perspective, consider the data's uniqueness, difficulty in access, technical expertise needed, market competition, and overall business value.
+
+Packaging:
+Develop different pricing tiers based on data freshness, update frequency, scope, and target audience. Decide between set-based or subscription-based sales. Consider a freemium structure for new leads, charging for standard and premium features.
+
+STEP 3: SELECT A DISTRIBUTION CHANNEL
+Options for distributing your data include direct data transfers, third-party data brokers, data marketplaces, or open protocols like delta sharing. Choose based on your needs and customer preferences.
 
 A direct data transfer to clients cuts out intermediaries and gives you more control over the final product. However, you do all the work, often with standards such as FTP and APIs, which have multiple disadvantages when it comes to storage and ETL costs, security vulnerabilities, service costs, and the potential for latency that can affect customer experience. Such solution are point to point solutions.
 
@@ -147,6 +148,8 @@ Databricks designed Delta Sharing with five goals in mind:
 4.	Provide strong security, auditing and governance 
 5.	Scale to massive structured data sets and also allow sharing of unstructured data and future data derivatives such as ML models, dashboards and notebooks, in addition to tabular data
 
+
+Topic: Data Mesh
 The Data Mesh is one of three important emerging data architectures; the other two are Data Fabric and Data Lakehouse. Organisations need to clearly understand what each of them is, why they are important and how to implement them at scale, in a hybrid landscape. Modern Data Strategy will look at the organisation’s data sources, data consumption, analytics goals to determine the optimal architecture to maximize value of data. Data Mesh is a new way of creating and sharing ‘Data-as-a-Product’ by decentralizing data ownership and accountability. However, extensive research, thinking and decision making are required to define proper data domain strategy as a pre-requisite to Data Mesh implementation. Next critical business task is to define trustworthy and accurate data products that can be easily discovered and shared across organization
 Data Mesh is ideally suited for organizations dealing with: 
 1.	Constant change in the topology of their data landscape 
@@ -171,25 +174,49 @@ Data as a Product must be easily discoverable, subscribable, and understandable 
 
 The first component of Data Mesh is an organizational change; the other three components also involve some organization change (people, process aspects) on top of the technology changes. Data Mesh architecture requires a strong change management process for an effective roll out.
 
-Category: Consumption use cases
-Consumption use cases for published data in a data lake refer to the various ways organizations and users can access, analyze, and derive value from the data stored in the data lake. Common consumption use cases for published data in a data lake include descriptive analytics by building dashboards and scheduling reports using BI tools. Data analysts and scientists can explore and discover new patterns, trends, and anomalies in the data on the data lake. Exploratory data analysis often involves ad-hoc querying, data profiling, and data visualization. Data scientists and machine learning engineers can access raw, enriched and published data in the data lake to build and train machine learning models, perform data exploration, and develop predictive analytics solutions. Popular tools like Jupyter notebooks, AI/ML frameworks such as TensorFlow, and PyTorch are commonly used. 
-
-Emerging use cases include building Customer 360, recommendation engines, digital twins and data monetization. Merging or joining data sets on data lakes for building a 360-degree view of customers, often referred to as "Customer 360," can provide organizations with valuable insights into their customers' behavior, preferences, and needs. Using a data lake for digital twins involves leveraging the data storage and processing capabilities of the data lake to create and manage digital representations of physical objects or systems. Digital twins are virtual replicas of real-world entities, providing a powerful framework for simulation, analysis, and monitoring. Digital twins powered by data lakes are particularly valuable in industries such as manufacturing, healthcare, energy, transportation, and construction. They enable organizations to gain a deeper understanding of their physical assets, improve operational efficiency, reduce downtime, and enhance decision-making by leveraging real-time data and simulations. 
-
-Data monetization refers to the process of generating revenue or deriving economic value from the data assets an organization possesses. In today's data-driven world, organizations accumulate vast amounts of data on the data lake, and data monetization strategies allow them to leverage this data or information or insights for financial gain or strategic advantages. 
-Data monetization offers substantial benefits, but it also presents several challenges that organizations must address such as compliance with data privacy regulations, such as GDPR and CCPA and determining the right monetization strategy and pricing model for data. Data metering, which involves measuring and tracking data usage, can help overcome some of these challenges. By providing visibility into data usage, access patterns, and data quality, organizations can make informed decisions, enforce governance policies, and ensure compliance. Additionally, data metering enables organizations to better understand customer behavior and optimize their monetization pricing strategies, leading to more successful and profitable data monetization initiatives. 
-
-Data mesh can play a significant role in driving data monetization by decentralizing ownership, emphasizing data productization, providing robust metadata and discovery capabilities, and promoting self-service access while maintaining governance and control. This approach is designed to make data more accessible, manageable, and valuable for organizations with complex data ecosystems. 
-
-Transforming a data lake into a real-time data hub involves implementing low latency event drive data pipelines for ingestion and exposing curated published datasets as a service. Securely exposing real-time data using API gateway enables users and applications to access and consume data in real time.
-
-Building conversational AI applications using a large language model (LLM) can be enhanced by integrating data from a data lake. Data lakes can serve as a valuable source of information for training and enhancing the capabilities of conversational AI models.
 
 
 STEPS TO CREATE A DATA MESH ARCHITECTURE
-1.	Self-Service Data Platform 
-Define Data Platform where data domain owners can access the data in a secure manner. Depending on where the organization is in the maturity of the implementation of their data strategy, different options are available to facilitate access to the data aligned to the data domain. If the organization has majority of the data consolidated on the data lake in different data zones, cloud data warehouse platform such as Snowflake can be used as the self service data platform. Alternatively, if the organization has adopted delta lake as the storage file format, data domains can access the domain data by querying the delta lake files from the raw zone or enriched or published zone. Lakehouse Federation capabilities enable organizations to create a highly scalable and performant data mesh architecture with unified governance. Alternatively, tools such as Prophecy can be used as the Self-Serve Platform that retrieves the data from the data lakehouse. If the organization is in the early stage of consolidating their data on the data lake or have data sources corresponding to a data domain that do not yet have the data on the data lake, then data virtualization tools can be leveraged to access the data directly from the transactional system or the system of record. Tools such as Databricks Lakehouse Federation in Unity Catalog allow customers to discover, query, and govern data across all of their data platforms from within Databricks without moving or copying the data first to the data lakehouse. While transactional system performance can be a concern when querying data for analytics in a data mesh architecture, careful design including caching, query optimization, and the use of replicated data storage and scalable data processing technologies can help mitigate these concerns and ensure that both operational and analytical needs are met efficiently. Tools such as StarBurst provide a platform with a rich ecosystem of connectors to connect to various data systems without needing the data to be consolidated on the data lake and also include data modelling capabilities to model the data corresponding to the data domain.
+1. Self-Service Data Platform
+Develop a data platform that ensures secure, domain-specific data access for domain owners. The architecture can leverage cloud-based solutions like Snowflake, or you can use file storage formats like Delta Lake based on your organization's data strategy. Databricks' Lakehouse Federation offers a unified approach for scalability and governance. For those with non-centralized data, data virtualization tools can be used, and platforms like StarBurst can offer advanced query optimization and connections to a variety of systems.
 
-Companies adopting a Data Mesh architecture must have an analytics engine capable of federating across these different data sources. Starburst is the analytics engine for the Data Mesh architecture, providing a single point of access to distributed data and empowering self-service analytics for each of the business domains. Starburst is built on open-source Trino, a distributed engine that can execute SQL queries against data stored in a range of databases and file systems. With Starburst and Trino, teams can lower the total cost of their infrastructure and analytics investments, prevent vendor lock-in, and use the existing tools that work for their business so that they can concentrate on enabling faster time-to-insights. Trino’s open technology means that integration with other open technologies such as data catalogs and data discovery tools is simpler and reduces the total cost of ownership of the self-service data platform.
+Expanded Reduced Version:
+For a Data Mesh architecture, companies should consider an analytics engine like Starburst to federate data across various sources. Built on Trino, an open-source SQL engine, Starburst promotes cost-effectiveness by avoiding vendor lock-in and lowering the total infrastructure and analytics costs. Furthermore, it offers easier integration with other open-source technologies, facilitating a quicker path to valuable insights.
 
+2. Federated Governance and Security
+Create a federated system for access control that caters to data product teams. This involves a delicate balance of implementing global policies while also allowing for domain-specific controls. Elements to consider include the delegation of policy ownership, establishing a common taxonomy for data tagging, and the ability to author and monitor domain-specific policies.
 
+Expanded Reduced Version:
+Implementing distributed access control is essential for the successful deployment of a Data Mesh architecture. This involves decoupling data policies from the data platform to allow greater flexibility and scalability. Platforms like Immuta help in automating this process. As the architecture grows to include more data domains and products, it's important that policy management remains flexible, scalable, and easy to manage to meet ever-changing requirements.
+
+3. Data As A Product
+Different types of data products can exist, categorized as Physical, Virtual, Stored Queries, and Analytical Products. Once these are created, they should not only be easily consumable but should also form part of a system where newer data products can leverage existing ones for quicker insights.
+
+Expanded Reduced Version:
+Data products in Data Mesh can range from physical datasets and virtual views to stored SQL queries and analytical tools such as dashboards or machine learning models. These should be easily discoverable and should be designed to integrate seamlessly with other data products, thereby accelerating the process of delivering insights. A data portal is instrumental for this, making data products searchable, well-documented, and controlled for access. Platforms like Prophecy and Databricks can effectively address these needs.
+
+Data products can be physical datasets, virtual views, SQL queries, or analytical tools like dashboards. They should be easy to find and integrate with other data products, accelerating the delivery of insights. A well-designed data portal should make data products searchable, well-documented, and controlled for access, and platforms like Prophecy and Databricks can be employed to facilitate this.
+Category: AI/ML reainess
+
+Data Science Platform
+Types of Data Science Platforms
+The data science platform landscape can be overwhelming. There are dozens of products describing themselves using similar language despite addressing different problems for different types of users. 
+We can divide the types of Data Science Platforms into 3 categories. They are: 
+1. Automation Tools
+These tools provide MLOps to help engineers to automate repetitive tasks in data science, including training models, selecting algorithms, and more. These solutions are targeted primarily at non-expert coders or data scientists interested in shortcutting tedious steps and repetitive steps. They help spread data science work by getting non-expert data scientists into the model-building process, offering drag-and-drop interfaces. 
+2. Data Science Platforms
+Proprietary tools such as Domo, Dataiku support a lot of use cases, including data science and model building using drag and drop UI or low code/no -code. They provide both drag-and-drop and code interfaces and have a stronghold in big companies and may even offer unique capabilities or algorithms. While these solutions offer a great breadth of functionality, the licensing cost could be prohibitive for small organization.  Most of the data science platforms have MLOps integrated in the AI/ML pipelines. There are open source alternatives such as KNIME.
+3. Code-first Data Science Platforms
+Code-first Data Science Platforms target data scientists and coders who use statistical programming languages and spend their days in IDEs like Jupyter and Colab, leveraging a mix of open-source and Machine Learning packages and tools to develop sophisticated models. These data scientists require the flexibility to use a constantly evolving software and hardware stack to optimize each step of their model lifecycle. These code-first data science platforms orchestrate the necessary infrastructure to accelerate power users' workflows and create a system of record for organizations with hundreds or thousands of models.
+
+Need for a Data Science Platform
+1. To Enable Better Teamwork with Data Scientists
+If the data scientists are solving the same problem in several ways and working separately, productivity will decrease as it will not deliver effective value to the organization. 
+If the whole team of data scientists works on a unified and single platform, where they are provided with the required tools, it ensures that all the contributions of the data scientists, i.e., data models, data visualizations, and code libraries, exist in a single shared reachable location. This helps data scientists to reuse the code, facilitate better discussion around research projects,  
+2. Help Minimalize Engineering Effort
+With data science platforms, data scientists get help in moving analytical models into production. A data science platform makes sure that the data models are accessible behind an API so that the data scientists do not have to depend much on engineering efforts. 
+It will decrease the additional engineering effort or DevOps. For instance, if a company wants to build a product recommendation engine, then the data scientist will require the efforts of a software engineer for testing, refining, and integrating the data model before the users start seeing the product recommendations on the basis of their behavior 
+3. Help to Offload a Number of Low Value Tasks
+Data scientists can cut off the burden of menial tasks such as reproducing past results and configuring new environments for non-technical users for every project, as these tasks can be efficiently handled with data science platforms. 
+4. Facilitate Faster Research and Experimentation by Collaboration
+Whenever there is a new person in the data science team, the employee can start working exactly from the point where the old employee left, as it is easier to restore the work through the unified platform. Data scientists do not have to deal with extra data management tasks, as data science platforms allow people to see what and how others are working on. 
