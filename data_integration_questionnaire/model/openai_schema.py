@@ -26,7 +26,7 @@ class BestPracticesAdvices(BaseModel):
     def to_html(self) -> str:
         html = "<ul>"
         for advice in self.advices:
-            html += f"<li>{advice}</li>"
+            html += f"<li class=\"onepoint-blue\">{advice}</li>"
         html += "</ul>"
         return html
 

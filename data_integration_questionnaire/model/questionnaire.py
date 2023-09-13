@@ -57,7 +57,7 @@ Answer: {render_answer(q.answer)}
             answer = qa.answer
             html += f"""
 <tr>
-    <td>
+    <td class="onepoint-blue">
         <br />
         Q: {qa.question}
     </td>

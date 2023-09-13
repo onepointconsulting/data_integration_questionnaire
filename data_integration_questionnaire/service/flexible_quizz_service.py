@@ -30,7 +30,7 @@ def read_best_practices() -> str:
     if not cfg.knowledge_base_path.exists():
         return prompts["data_integration_questionnaire_generator"]["best_practices"]
     else:
-        with open(cfg.knowledge_base_path, 'r') as f:
+        with open(cfg.knowledge_base_path, 'r', encoding="utf-8") as f:
             return f.read()
 
 

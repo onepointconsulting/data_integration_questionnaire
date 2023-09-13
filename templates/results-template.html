@@ -15,27 +15,81 @@
             font-family: 'Bodoni Moda', serif;
             font-family: 'Montserrat', sans-serif;
             font-family: 'Sen', sans-serif;
+            margin: 1em 1em;
+        }
+
+        .container {
+            margin: 0em 1em;
+            box-sizing: border-box;
+        }
+
+        .image-banner {
+            height: 13em;
+            width: 100%;
+            display: flex;
+            flex-direction: "row";
+            align-items: center;
+            margin: -11.5em 0 1em 0;
+            padding: 0 1em;
+            box-sizing: border-box;
+        }
+
+        .banner {
+            width: 100%;
+        }
+
+        .image-banner h1,
+        .image-banner h3 {
+            color: white;
+        }
+
+        .date-produced {
+            font-size: small;
+        }
+
+        .questionnaire {
+            color: #7d7d7d;
+        }
+
+        .onepoint-blue {
+            color: #0084D7
+        }
+
+        .logo {
+            margin: 0 0 1em 0
         }
     </style>
 </head>
 
 <body>
-    <a href="https://www.onepointltd.com"><img src="https://www.onepointltd.com/wp-content/uploads/2020/06/logo-one-point.png" alt="Onepoint Consulting Ltd" /></a>
-    <p style="text-align: right;">Date: {{timestamp}}</p>
-    <p>Big thank you for completing the&nbsp;<strong><a title="Onepoint Consulting Ltd"
-                href="https://www.onepointltd.com/" target="_blank">Onepoint</a>'s Data Integration Assessment
-            Quiz</strong>.</p>
-    <h3>Questionnaire</h3>
-    <table>
-        <tbody>
-            {{questionnaire}}
-        </tbody>
-    </table>
-    <h3>Advice</h3>
-    <ul>
-        {{advices}}
-    </ul>
-    <p>&nbsp;</p>
+    <a href="https://www.onepointltd.com"><img
+            src="https://www.onepointltd.com/wp-content/uploads/2020/06/logo-one-point.png"
+            alt="Onepoint Consulting Ltd" class="logo"/></a>
+    <img src="https://healthcheck.onepointltd.ai/public/images/banner_blank.png" class="banner"/>
+    <div class="image-banner">
+        <div>
+            <h1>Data Analytics & Self-Assessment</h1>
+            <h3>Powered by Onepoint's Data & Analytics Body of Knowledge and ChatGPT</h3>
+        </div>
+    </div>
+    <div class="container">
+        
+        <p class="date-produced">Produced on: {{timestamp}}</p>
+        <p>Big thank you for completing the&nbsp;<strong><a title="Onepoint Consulting Ltd"
+                    href="https://www.onepointltd.com/" target="_blank">Onepoint</a>'s Data & Analytics Self-Assessment!</strong></p>
+        <p>Here you have the questions we asked and the answers you gave, followed by the recommendations and suggested courses of action. </p>
+        <h2 class="questionnaire">Questionnaire</h2>
+        <table>
+            <tbody>
+                {{questionnaire}}
+            </tbody>
+        </table>
+        <h2 class="questionnaire">Recommendations and suggested courses of action</h2>
+        <ul>
+            {{advices}}
+        </ul>
+        <p>&nbsp;</p>
+    </div>
 </body>
 
 </html>
