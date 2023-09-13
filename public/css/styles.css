@@ -24,3 +24,9 @@
     color: #4f83bd
 }
 
+.image-banner {
+    background: url("/public/images/banner_blank.png") center center / cover no-repeat;
+    color: white;
+    min-height: 15em;
+}
+
