@@ -34,6 +34,36 @@
     min-height: 10em;
 }
 
+.logo-box img {
+    position: relative;
+    right: -1em;
+    max-width: 68%
+}
+
+.image-banner > .css-dvxtzn {
+    align-items: start;
+}
+
+/* Aavatar related */
+.MuiAvatar-circular {
+    margin: 0 auto
+}
+
+.css-kt4rn8 {
+    text-align: center;
+}
+/* End Avatar */
+
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+
+    /* Mobile title */
+    .css-17yvo7f {
+        font-size: 84%;
+        padding: 0 1em;
+    }
+ }
+
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) { 
@@ -41,4 +71,4 @@
     .image-banner {
         min-height: 15em;
     }
- }
+}
