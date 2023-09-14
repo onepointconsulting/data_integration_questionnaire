@@ -92,62 +92,49 @@ Transforming a data lake into a real-time data hub involves implementing low lat
 
 Building conversational AI applications using a large language model (LLM) can be enhanced by integrating data from a data lake. Data lakes can serve as a valuable source of information for training and enhancing the capabilities of conversational AI models.
 
-Topic: Data Monetization
-Companies across industries are commercializing data, and this segment continues to grow across industries. Large multinational organizations have formed exclusively to monetize data, while other organizations are looking for ways to monetize their data and generate additional revenue streams. Examples of these companies can range from an agency with an identity graph to a telecommunication company with proprietary 5G data or to retailers that have a unique ability to combine online and offline data. Data vendors are growing in importance as companies realize they need external data for better decision-making.
-FOUR STEPS TO START YOUR DATA MONETIZATION JOURNEY
+Companies are increasingly monetizing data for additional revenue, involving everything from identity graphs to proprietary 5G and retail data. Data vendors are crucial for informed decision-making.
 
-STEP 1: IDENTIFY YOUR DATA ASSETS
-Start by identifying your shareable data, avoiding sensitive or restricted information. Categories can include Operational, Commercial, Marketing, Behavioral, and SaaS data. Also consider "dark data," which is collected but not actively used. It can be valuable when combined with other data.
+FOUR STEPS FOR DATA MONETIZATION
 
-COMMON TYPES OF DATA OFFERINGS
-You can monetize different forms of data:
+STEP 1: IDENTIFY DATA ASSETS
+Catalog your shareable data such as Operational, Commercial, or Marketing data. Don't forget underutilized "dark data."
+
+COMMON DATA TYPES
+Options for monetization include:
 
 Raw Data
 Packaged data products
-Analysis via dashboards
-Data enhancement services
-Data trade or exchange
-Assess if raw data suffices for your clients or whether combining or enhancing it with additional data sets adds value. For instance, retailers' data could be enriched with weather and demographics to create a premium offering. Adding layers of analytics increases the data's potential value.
+Dashboards
+Enhancement services
+Data trade
+Determine if enriching your data with additional sets provides extra value.
 
-STEP 2: CHOOSE A PRICING STRATEGY
-Two main approaches for pricing your data products are cost pricing and value pricing.
+STEP 2: PRICING STRATEGY
+Two pricing methods are cost and value pricing.
 
-Cost Pricing:
-Consider the cost of sourcing, packaging, and sharing the data. Factor these costs into your pricing, adding a profit margin. Alternatively, you might offer data below cost as a customer acquisition tool.
+Cost Pricing: Cover sourcing and sharing costs, adding profit.
+Value Pricing: Consider uniqueness, market competition, and business value.
+Develop tiered pricing based on data freshness and audience. Consider freemium models for new leads.
 
-Value Pricing:
-From a customer’s perspective, consider the data's uniqueness, difficulty in access, technical expertise needed, market competition, and overall business value.
+STEP 3: DISTRIBUTION CHANNEL
+Channels include direct transfers, third-party brokers, marketplaces, or open protocols like Delta Sharing.
 
-Packaging:
-Develop different pricing tiers based on data freshness, update frequency, scope, and target audience. Decide between set-based or subscription-based sales. Consider a freemium structure for new leads, charging for standard and premium features.
+Direct transfers give control but require more work. Data brokers assist but limit direct relationships and control. Traditional marketplaces help but have limitations like file transfer hassles. Data integrity is a concern for all.
 
-STEP 3: SELECT A DISTRIBUTION CHANNEL
-Options for distributing your data include direct data transfers, third-party data brokers, data marketplaces, or open protocols like delta sharing. Choose based on your needs and customer preferences.
+Delta Sharing: A secure method to share live data without moving it. It works with multiple platforms and offers centralized governance.
 
-A direct data transfer to clients cuts out intermediaries and gives you more control over the final product. However, you do all the work, often with standards such as FTP and APIs, which have multiple disadvantages when it comes to storage and ETL costs, security vulnerabilities, service costs, and the potential for latency that can affect customer experience. Such solution are point to point solutions.
+STEP 4: DATA SHARING SOLUTION
+Options like Delta Sharing or Snowflake Secure Data Sharing offer immediate data product availability with benefits like real-time updates and revocable access.
 
-A data broker such as revelate can help market your data and will sometimes also control pricing. But you’ll miss out on forging direct relationships with the ultimate users of your data, and you may not have the ability to choose who sees the data, or get a sense of how they are using it. Moreover, if you need to update the data on a regular basis, every engagement with a less sophisticated data broker may be like the first, requiring all the data transformation and loading you did the first time. 
+Snowflake Marketplace provides a broader reach under your guidelines. Delta Sharing, integrated with Unity Catalog, allows data sharing while meeting security requirements.
 
-Traditional data marketplaces also promise to help with client acquisition and pricing plans. But they offer limited opportunities for promotion and incomplete control over the presentation, in addition to the usual file transfer and update hassles. API based data marketplaces require both the buyer and seller to code to a bespoke API, and then maintain, troubleshoot, and update that code over time. Traditional distribution channels move data from point A to point B, often with a couple of stops in between. This means they all have a common problem: when data travels, it becomes vulnerable to corruption, loss, theft, latency, and obsolescence. 
+Delta Sharing Goals:
 
-What is Delta Sharing? Delta Sharing provides an open solution to securely share live data from your lakehouse to any computing platform. Recipients don’t have to be on the Databricks platform or on the same cloud or a cloud at all. Data providers can share live data without replicating it or moving it to another system. Recipients benefit from always having access to the latest version of data and can quickly query shared data using tools of their choice for BI, analytics and machine learning, reducing time-to-value.
-Data providers can centrally manage, govern, audit and track usage of the shared data on one platform. 
-
-STEP 4: CHOOSE A DATA SHARING SOLUTION 
-By leveraging solution such as Deltashare open protocol or vendor proprietary Snowflake Secure Data Sharing capabilities, data sellers can easily publish a variety of data products, which then become immediately available for use or purchase. This has multiple benefits for both data sellers and data buyers. 
-Snowflake’s Collaboration technology enables organizations to share data directly with their customers, suppliers, and business partners, without actually moving it. The data remains fully encrypted and stays put in the data seller’s Snowflake account; there are no duplicate data sets held by the buyer to chase down if regulations or relationships change, and data access is fully revocable at any time. The data is updated in near real time, not just whenever the IT schedules a refresh job. The data seller retains real-time, fine-grained control and determines who has access rights and can change or revoke them at any time.
-
-Snowflake Marketplace offers a more sustainable approach to providing data access to a broad audience. As a data seller, you can offer your data product under your own guidelines and update schedule—as a free offering or a commercial offering with your preferred pricing model. Anyone can find, try, and buy data products and services on Snowflake Marketplace with minimum effort and maximum efficiency.
-
-Delta Sharing is natively integrated with Unity Catalog, enabling organizations to centrally manage and audit shared data across organizations and confidently share data assets while meeting security and compliance needs. With Delta Sharing, organizations can easily share existing large scale data sets based on the open source formats Apache Parquet and Delta Lake without moving data. Teams gain the flexibility to query, visualize, transform, ingest or enrich shared data with their tools of choice.
-
-Databricks designed Delta Sharing with five goals in mind: 
-1.	Provide an open cross-platform sharing solution 
-2.	Share live data without copying it to another system 
-3.	Support a wide range of clients such as Power BI, Tableau, Apache Spark™, pandas and Java, and provide flexibility to consume data using the tools of choice for BI, machine learning and AI use cases 
-4.	Provide strong security, auditing and governance 
-5.	Scale to massive structured data sets and also allow sharing of unstructured data and future data derivatives such as ML models, dashboards and notebooks, in addition to tabular data
-
+Open cross-platform sharing
+Live data sharing
+Wide client support
+Strong security
+Scalable sharing of structured and unstructured data.
 
 Topic: Data Mesh
 The Data Mesh is one of three important emerging data architectures; the other two are Data Fabric and Data Lakehouse. Organisations need to clearly understand what each of them is, why they are important and how to implement them at scale, in a hybrid landscape. Modern Data Strategy will look at the organisation’s data sources, data consumption, analytics goals to determine the optimal architecture to maximize value of data. Data Mesh is a new way of creating and sharing ‘Data-as-a-Product’ by decentralizing data ownership and accountability. However, extensive research, thinking and decision making are required to define proper data domain strategy as a pre-requisite to Data Mesh implementation. Next critical business task is to define trustworthy and accurate data products that can be easily discovered and shared across organization
@@ -209,14 +196,108 @@ Proprietary tools such as Domo, Dataiku support a lot of use cases, including da
 3. Code-first Data Science Platforms
 Code-first Data Science Platforms target data scientists and coders who use statistical programming languages and spend their days in IDEs like Jupyter and Colab, leveraging a mix of open-source and Machine Learning packages and tools to develop sophisticated models. These data scientists require the flexibility to use a constantly evolving software and hardware stack to optimize each step of their model lifecycle. These code-first data science platforms orchestrate the necessary infrastructure to accelerate power users' workflows and create a system of record for organizations with hundreds or thousands of models.
 
-Need for a Data Science Platform
-1. To Enable Better Teamwork with Data Scientists
-If the data scientists are solving the same problem in several ways and working separately, productivity will decrease as it will not deliver effective value to the organization. 
-If the whole team of data scientists works on a unified and single platform, where they are provided with the required tools, it ensures that all the contributions of the data scientists, i.e., data models, data visualizations, and code libraries, exist in a single shared reachable location. This helps data scientists to reuse the code, facilitate better discussion around research projects,  
-2. Help Minimalize Engineering Effort
-With data science platforms, data scientists get help in moving analytical models into production. A data science platform makes sure that the data models are accessible behind an API so that the data scientists do not have to depend much on engineering efforts. 
-It will decrease the additional engineering effort or DevOps. For instance, if a company wants to build a product recommendation engine, then the data scientist will require the efforts of a software engineer for testing, refining, and integrating the data model before the users start seeing the product recommendations on the basis of their behavior 
-3. Help to Offload a Number of Low Value Tasks
-Data scientists can cut off the burden of menial tasks such as reproducing past results and configuring new environments for non-technical users for every project, as these tasks can be efficiently handled with data science platforms. 
-4. Facilitate Faster Research and Experimentation by Collaboration
-Whenever there is a new person in the data science team, the employee can start working exactly from the point where the old employee left, as it is easier to restore the work through the unified platform. Data scientists do not have to deal with extra data management tasks, as data science platforms allow people to see what and how others are working on. 
+need for Data Science Platform
+
+Enhance Teamwork Among Data Scientists
+Working individually on varied approaches hampers productivity and value. A unified data science platform centralizes tools, models, visualizations, and code, fostering code reuse and easier team discussions.
+
+Reduce Engineering Efforts
+Data science platforms ease the transition of analytical models into production by offering API support, lessening dependency on engineering teams. This streamlines tasks like integrating a product recommendation engine.
+
+Offload Low-Value Tasks
+Such platforms handle routine tasks like reproducing past results and setting up new environments, freeing data scientists to focus on core projects.
+
+Speed Up Research and Collaboration
+New team members can easily pick up where predecessors left off via the unified platform. It eliminates extra data management chores, making it simple to view and understand team contributions.
+Category: Data Governance
+Data lake architecture often suffers from a lack of oversight, requiring governance and access controls to prevent turning into a data swamp. Data catalogs are central to this, offering an organized metadata repository. Active metadata management continuously updates and enriches metadata for data governance activities. Data governance tackles data quality, privacy, and compliance, while AI governance focuses on ethical AI use. Both areas intersect to ensure AI systems use high-quality, compliant data.
+
+Data Security:
+The focus is on safeguarding data assets in various states, encompassing confidentiality, integrity, and availability. Strategies include data masking, anonymization, and classification. AI security, a subset of data security, addresses specific risks like adversarial attacks and data poisoning, especially critical in sectors like healthcare and finance.
+
+Data Infrastructure:
+Edge computing performs data processing near data sources, reducing costs and enabling real-time analytics. Fog computing extends cloud capabilities closer to the edge. Hybrid analytics solutions integrate edge and cloud computing, providing a full data view. It’s essential to assess data lake and AI needs to allocate resources efficiently. Hybrid cloud offers versatility, supporting a range of workloads including AI/ML applications.
+
+Operationalizing Data Lakes:
+DevOps focuses on software, DataOps on data workflows, and MLOps on operationalizing machine learning models. Each has its unique emphasis but needs to be integrated for an effective data lake strategy. The goal is a cohesive environment promoting data quality, efficient workflows, and streamlined ML model deployment.
+
+Category: AI gevernance
+AI is increasingly automating high-stakes business decisions. AI governance aligns these systems with organizational and ethical norms, extending beyond traditional data governance to include machine learning management.
+
+Why It's Important:
+AI governance involves clear policies for who manages and updates models, and how their performance and ethical implications are measured and monitored.
+
+Relation to Ethics:
+AI ethics and governance intersect, setting boundaries in ambiguous situations like privacy and bias. Governance makes these ethical decisions transparent through metrics.
+
+MLOps' Role:
+MLOps enhances AI governance by adding visibility, version control, and automation to machine learning systems.
+
+Key Strategies:
+
+Top-Down/Bottom-Up: Needs executive and team-level responsibility.
+Enable Innovation: Governance should support, not hinder, creativity.
+Quality: High standards are essential for data and models.
+Model Management: Continuous monitoring ensures performance.
+Transparency: Tools like Aequitas and Dataiku help in ethical scrutiny.
+In essence, effective AI governance requires organizational alignment, clear policies, ethical considerations, and strategic monitoring.
+
+Category: NLP
+NLP is a subset of machine learning focused on interpreting human language. It is used in tasks like topic extraction, sentiment analysis, and even creating conversational agents for customer support. You often encounter NLP systems without knowing it, in areas like:
+
+Search engines
+Voice assistants
+Language translation
+Information extraction
+Sentiment analysis
+HOW DOES NLP WORK?
+
+PRE-PROCESSING: Data is cleaned and labeled for algorithmic processing. Modern methods also use unlabeled data. Tasks include tokenization, stop-word removal, text normalization, and entity extraction, commonly using the spaCy Python library.
+VECTORIZATION: Text is converted to numerical data using techniques like Count Vectorization and TF-IDF. More recently, word embedding techniques have become prevalent, capturing contextual information between words.
+TESTING: After building a baseline NLP model, its accuracy is tested on a separate data subset to ensure it generalizes well beyond the training data.
+
+Category: AI security
+AI security focuses on two types of attacks: manipulating the system's decisions and unauthorized data or model access. To counter these threats, effective security measures must cover three core areas: mitigating known attacks, securing the model through verification, and ensuring secure architecture. Transparency and explainability are also fundamental for robust AI security.
+
+Three Layers of Defense:
+1. Mitigation against known threats.
+2. Ensuring model security through rigorous verification.
+3. Implementing secure architecture for overall business safety.
+
+AI systems in critical sectors like healthcare and transportation face significant risks. These risks manifest as five challenges:
+1. Software and hardware vulnerabilities.
+2. Data integrity issues, such as malicious data injection.
+3. Maintaining model confidentiality against cloning attacks.
+4. Ensuring model robustness against data limitations.
+5. Protecting data privacy against repeated queries.
+
+Common AI Security Attacks:
+1. Evasion: Altering inputs to deceive the model. Methods include adversarial examples.
+2. Poisoning: Inserting malicious data during retraining phases.
+3. Backdoor: Embedding hidden triggers in AI models.
+4. Model Stealing: Inferring model parameters through input-output analysis.
+
+Defensive Measures:
+- Against evasion: Techniques like network distillation and adversarial training improve robustness.
+- Against poisoning: Strategies like data filtering and ensemble analysis increase resilience.
+- Against backdoors: Measures such as input pre-processing and model pruning can be effective.
+- Against model stealing: Privacy-enhancing methods like PATE and differentially private protections.
+
+Performance and Verification:
+- Traditional testing methods offer limited but necessary security.
+- Verification is often challenging due to the complexity of the data involved.
+
+Explainability in AI:
+- Understanding the logic behind AI decisions can mitigate legal risks and improve overall security.
+- Explainable models blend traditional ML techniques for better interpretability.
+
+GDPR and Bias:
+- GDPR mandates avoiding algorithmic decisions based on sensitive personal data. Explainable AI helps in compliance and fighting algorithmic discrimination, often arising from biased data inputs.
+
+In AI development, risk assessments guide the creation of robust and secure architecture, featuring key mechanisms like isolation, detection, failsafe procedures, and redundancy. Especially in applications like autonomous driving or healthcare, systems must be designed to allow for fallback options like manual control.
+
+Security Mechanisms for AI:
+1. Isolation: Separate functional modules to reduce the potential for attacks.
+2. Detection: Continuous monitoring helps in early identification of security risks.
+3. Failsafe: During critical operations, low-certainty AI results trigger fallback to manual control or rule-based systems.
+4. Redundancy: Employ multiple models to mitigate risks and improve system robustness.
