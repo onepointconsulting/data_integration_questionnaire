@@ -344,7 +344,7 @@ async def generate_display_pdf(advices, merged_questionnaire):
 
 
 async def display_advices(advices: BestPracticesAdvices) -> Optional[str]:
-    advices = advices.advices
+    advices = advices.get_advices()
     advice_amount = len(advices)
     if advice_amount > 0:
         pieces = "piece" if advice_amount == 1 else "pieces"

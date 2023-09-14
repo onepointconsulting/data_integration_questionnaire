@@ -44,6 +44,11 @@
     align-items: start;
 }
 
+/* Hiding chat button */
+.MuiStack-root.css-1mzerio {
+    display: none;
+}
+
 /* Aavatar related */
 .MuiAvatar-circular {
     margin: 0 auto

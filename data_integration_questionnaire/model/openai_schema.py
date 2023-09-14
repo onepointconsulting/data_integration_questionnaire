@@ -1,3 +1,5 @@
+import re
+
 from pydantic import BaseModel, Field
 
 from typing import List, Optional
@@ -29,6 +31,11 @@ class BestPracticesAdvices(BaseModel):
             html += f"<li class=\"onepoint-blue\">{advice}</li>"
         html += "</ul>"
         return html
+    
+
+    def get_advices(self) -> List[str]:
+        _advices = [re.sub(r"^\s*\d+\.", "", a).strip() for a in self.advices]
+        return _advices
 
 
 class ResponseTags(BaseModel):
@@ -53,3 +60,10 @@ class Clarifications(BaseModel):
         ...,
         description="Answers to any questions from the user answers you can find in the text.",
     )
+
+
+if __name__ == "__main__":
+    best_practices = BestPracticesAdvices(advices=["1. Do this and do that.", "2. Do something else.", "I forgot the number here."])
+    for a in best_practices.get_advices():
+        assert re.match(r"^[^\d].+", a)
+        print(a)
