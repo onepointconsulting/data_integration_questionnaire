@@ -160,9 +160,10 @@ The graphic below may help with your response — it captures some of the most c
 
     # Produce advices
     advisor_chain = chain_factory_advisor()
+    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
     advices: BestPracticesAdvices = await advisor_chain.arun(
         prepare_questions_parameters(merged_questions, False),
-        callbacks=[OnepointAsyncLangchainCallbackHandler()],
+        callbacks=callbacks,
     )
 
     # Check if there are questions
@@ -265,8 +266,9 @@ async def generate_execute_primary_questions(
     )
     initial_chain = chain_factory_initial_question()
     await cl.Message(content="").send()
+    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
     initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
-        input, callbacks=[OnepointAsyncLangchainCallbackHandler()]
+        input, callbacks=callbacks
     )
     best_practices_questionnaire: Questionnaire = await questionnaire_factory(
         initial_best_practices_questions
@@ -285,8 +287,9 @@ async def generate_execute_primary_questions(
 async def check_has_questions(loop_question_data: LoopQuestionData, answer_str: str):
     sentiment_chain = sentiment_chain_factory()
     logger.info("answer_str: %s", answer_str)
+    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
     response_tags: ResponseTags = await sentiment_chain.arun(
-        {"answer": answer_str}, callbacks=[OnepointAsyncLangchainCallbackHandler()]
+        {"answer": answer_str}, callbacks=callbacks
     )
     loop_question_data.questionnaire_has_questions = (
         response_tags.has_questions and len(response_tags.extracted_questions) > 0
@@ -296,7 +299,7 @@ async def check_has_questions(loop_question_data: LoopQuestionData, answer_str: 
         questions_str = "\n\n".join(response_tags.extracted_questions)
         clarifications: Clarifications = await clarification_chain.arun(
             create_clarification_input(questions_str),
-            callbacks=[OnepointAsyncLangchainCallbackHandler()],
+            callbacks=callbacks,
         )
         loop_question_data.clarifications = clarifications.answers
 
@@ -306,13 +309,14 @@ async def generate_execute_secondary_questions(
 ) -> Questionnaire:
     secondary_chain = chain_factory_secondary_questions()
     await cl.Message(content="").send()
+    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
     secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
         prepare_questions_parameters(
             questionnaire=loop_question_data.questionnaire,
             questions_per_batch=loop_question_data.question_per_batch,
             include_questions_per_batch=True,
         ),
-        callbacks=[OnepointAsyncLangchainCallbackHandler()],
+        callbacks=callbacks,
     )
     best_practices_secondary_questionnaire: Questionnaire = await questionnaire_factory(
         secondary_questions
@@ -404,6 +408,7 @@ async def on_action(action):
 
 async def process_classification(questionnaire, quizz_input, advice_markdown):
     classification_chain = create_classification_profile_chain_pydantic()
+    
     res = await classification_chain.arun(
         quizz_input, callbacks=[OnepointAsyncLangchainCallbackHandler()]
     )

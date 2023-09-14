@@ -21,6 +21,7 @@ class Config:
     request_timeout = int(os.getenv("REQUEST_TIMEOUT"))
     has_langchain_cache = os.getenv("LANGCHAIN_CACHE") == "true"
     llm = ChatOpenAI(
+        openai_api_key=os.getenv("OPENAI_API_KEY"),
         model=model,
         temperature=0,
         request_timeout=request_timeout,
@@ -43,6 +44,7 @@ class Config:
     create_if_not_exists(pdf_folder)
     use_tasklist = os.getenv("TASKLIST") == "true"
     knowledge_base_path = Path(os.getenv("KNOWLEDGE_BASE_PATH"))
+    show_chain_of_thought = os.getenv("SHOW_CHAIN_OF_THOUGHT") == 'true'
 
 cfg = Config()
 
