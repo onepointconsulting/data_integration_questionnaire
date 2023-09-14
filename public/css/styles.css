@@ -45,7 +45,7 @@
 }
 
 /* Hiding chat button */
-.MuiStack-root.css-1mzerio {
+.logo-box + .MuiStack-root.css-1mzerio {
     display: none;
 }
 

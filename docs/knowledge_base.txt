@@ -38,7 +38,7 @@ Since organization have compute engines such as snowflake and databaricks alread
 Capability: There is an emerging trend where there is a need to do integration with a single tool whether its bulk/batch data or real time or streaming data. Organizations have multiple tools for data integration where ETL us used for bulk loads, Kafka used for real time publish, Nifi for streamlining. Some of the tools are on-prem and there is trend to move these workloads and data integration capabilities on cloud. 
                Enabler: Having a unified platform simplifies maintainability of the integration platform.
 
-Categoy: Data Sharing
+Category: Data Sharing
 What Is Data Sharing and Why Is It Important?
 Data sharing is the ability to make the same data available to one or many stakeholders — both external and internal. Nowadays, the ever-growing amount of data has become a strategic asset for any company. Data sharing — within your organization or externally — is an enabling technology for data commercialization and enhanced analysis. Sharing data as well as consuming data from external sources allow companies to collaborate with partners, establish new partnerships and generate new revenue streams with data monetization. Data sharing can deliver benefits to business groups across the enterprise. For those business groups, data sharing can get them access to data needed to make critical decisions. This includes but is not limited to roles such as the data analyst, data scientist and data engineer.
 

@@ -273,7 +273,8 @@ async def generate_execute_primary_questions(
     )
 
     # Check if there are questions
-    await check_has_questions(loop_question_data, first_qa.answer["content"])
+    if "content" in first_qa.answer:
+        await check_has_questions(loop_question_data, first_qa.answer["content"])
 
     loop_question_data.message = ""
     loop_question_data.questionnaire = best_practices_questionnaire
@@ -331,6 +332,7 @@ async def generate_execute_secondary_questions(
 
 async def generate_display_pdf(advices, merged_questionnaire):
     pdf_path = await asyncify(generate_pdf_from)(merged_questionnaire, advices)
+    logger.info("PDF path: %s", pdf_path)
     elements = [
         cl.File(
             name=pdf_path.name,
@@ -344,21 +346,21 @@ async def generate_display_pdf(advices, merged_questionnaire):
 
 
 async def display_advices(advices: BestPracticesAdvices) -> Optional[str]:
-    advices = advices.get_advices()
-    advice_amount = len(advices)
+    plain_advices = advices.get_advices()
+    advice_amount = len(plain_advices)
     if advice_amount > 0:
         pieces = "piece" if advice_amount == 1 else "pieces"
         await cl.Message(
             content=f"You have {advice_amount} {pieces} of advice.",
             author=AVATAR["CHATBOT"],
         ).send()
-        advice_markdown = "\n- ".join(advices)
+        advice_markdown = "\n- ".join(plain_advices)
 
         actions = []
         if cfg.use_tasklist:
-            task_list: cl.TaskList = await create_task_list(advices)
+            task_list: cl.TaskList = await create_task_list(plain_advices)
             cl.user_session.set("task_list", task_list)
-            actions: List[cl.Action] = create_advice_task_actions(advices)
+            actions: List[cl.Action] = create_advice_task_actions(plain_advices)
         await cl.Message(
             content="\n- " + advice_markdown, author=AVATAR["CHATBOT"], actions=actions
         ).send()
@@ -432,36 +434,37 @@ async def process_send_email(
         timeout=cfg.ui_timeout,
         author=AVATAR["CHATBOT"],
     ).send()
-    response_content = response["content"]
-    if validate_address(response_content):
-        logger.info("Sending email to %s", response_content)
-        await asyncify(send_email)(
-            "Dear customer",
-            response_content,
-            "Onepoint Data Integration Questionnaire",
-            f"""
-<p>Big thank you for completing the <b>Onepoint's Data Integration Assessment Quiz</b>.</p>
+    if "content" in response:
+        response_content = response["content"]
+        if validate_address(response_content):
+            logger.info("Sending email to %s", response_content)
+            await asyncify(send_email)(
+                "Dear customer",
+                response_content,
+                "Onepoint Data Integration Questionnaire",
+                f"""
+    <p>Big thank you for completing the <b>Onepoint's Data Integration Assessment Quiz</b>.</p>
 
-<h2>Questionnaire</h2>
-{questionnaire.to_html()}
+    <h2>Questionnaire</h2>
+    {questionnaire.to_html()}
 
-<h2>Advice</h2>
-{advices.to_html()}
+    <h2>Advice</h2>
+    {advices.to_html()}
 
-For more information, please visit our <a href="https://onepointltd.com">webpage</a>.
+    For more information, please visit our <a href="https://onepointltd.com">webpage</a>.
 
-""",
-        )
-        await cl.Message(
-            content=f"Thank you for submitting the query. We really appreciate that you have taken time to do this.",
-            author=AVATAR["CHATBOT"],
-        ).send()
-    else:
-        logger.warn("%s is not a valid email", response_content)
-        await cl.ErrorMessage(
-            content=f"Sorry, '{response_content}' does not seem to be an email address",
-            author=AVATAR["CHATBOT"],
-        ).send()
+    """,
+            )
+            await cl.Message(
+                content=f"Thank you for submitting the query. We really appreciate that you have taken time to do this.",
+                author=AVATAR["CHATBOT"],
+            ).send()
+        else:
+            logger.warn("%s is not a valid email", response_content)
+            await cl.ErrorMessage(
+                content=f"Sorry, '{response_content}' does not seem to be an email address",
+                author=AVATAR["CHATBOT"],
+            ).send()
     await cl.Message(
         content=f"The questionnaire is complete. Please press the 'New Chat' button to restart.",
         author=AVATAR["CHATBOT"],
