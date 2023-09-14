@@ -1,13 +1,17 @@
+:root {
+    --text_blue: #0079C4;
+  }
+
 .markdown-body img {
     width: 100%
 }
 
 .MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root {
-    border: 1px #0084D7 solid;
+    border: 1px var(--text_blue) solid;
 }
 
 .generated-message {
-    color: #0084D7
+    color: var(--text_blue)
 }
 
 .MuiButtonBase-root.MuiButtonBase-root.css-1vhtqje {
@@ -16,7 +20,7 @@
 }
 
 .MuiButtonBase-root.MuiButton-root.css-1ruedog {
-    border: 1px solid #0084D7;
+    border: 1px solid var(--text_blue);
     color: #5285be
 }
 
@@ -27,6 +31,14 @@
 .image-banner {
     background: url("/public/images/banner_blank.png") center center / cover no-repeat;
     color: white;
-    min-height: 15em;
+    min-height: 10em;
 }
 
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+
+    .image-banner {
+        min-height: 15em;
+    }
+ }
