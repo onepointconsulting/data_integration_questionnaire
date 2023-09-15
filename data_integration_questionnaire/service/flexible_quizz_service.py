@@ -106,6 +106,7 @@ def prepare_initial_question(
     question: str,
     answer: str,
     questions_per_batch: int = prompts["general_settings"]["questions_per_batch"],
+    best_practices=best_practices
 ) -> dict:
     return {
         "best_practices": best_practices,

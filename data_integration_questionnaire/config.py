@@ -52,6 +52,7 @@ class Config:
     embeddings_persistence_dir = Path(os.getenv("EMBEDDINGS_PERSISTENCE_DIR"))
     chunk_size = int(os.getenv("EMBEDDINGS_CHUNK_SIZE"))
     embeddings = OpenAIEmbeddings(chunk_size=chunk_size)
+    search_results_how_many = int(os.getenv("SEARCH_RESULTS_HOW_MANY"))
 
 cfg = Config()
 

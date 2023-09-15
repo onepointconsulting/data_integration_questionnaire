@@ -45,6 +45,7 @@ from data_integration_questionnaire.service.mail_sender import (
 from data_integration_questionnaire.log_init import logger
 
 from asyncer import asyncify
+from data_integration_questionnaire.service.similarity_search import init_vector_search, similarity_search
 from data_integration_questionnaire.service.tagging_service import (
     sentiment_chain_factory,
 )
@@ -59,9 +60,12 @@ from data_integration_questionnaire.ui.customized_chainlit_callback import (
 )
 from data_integration_questionnaire.ui.model import LoopQuestionData
 
+
+
 AVATAR = {"CHATBOT": "Chatbot", "USER": "User"}
 TOOL_NAME = "Data & Analytics Self-Assessment"
 
+docsearch = init_vector_search()
 
 def display_image(image_path: str, alt: str, title: str):
     return f'![{alt}](/public/images/{image_path} "{title}")'
@@ -259,10 +263,12 @@ async def generate_execute_primary_questions(
     loop_question_data: LoopQuestionData,
 ) -> Questionnaire:
     first_qa = loop_question_data.questionnaire.questions[0]
+    search_res = similarity_search(docsearch, first_qa.answer_str())
     input = prepare_initial_question(
         first_qa.question,
         first_qa.answer,
         loop_question_data.question_per_batch,
+        best_practices=search_res
     )
     initial_chain = chain_factory_initial_question()
     await cl.Message(content="").send()
@@ -408,7 +414,7 @@ async def on_action(action):
 
 async def process_classification(questionnaire, quizz_input, advice_markdown):
     classification_chain = create_classification_profile_chain_pydantic()
-    
+
     res = await classification_chain.arun(
         quizz_input, callbacks=[OnepointAsyncLangchainCallbackHandler()]
     )

@@ -15,6 +15,15 @@ class QuestionAnswer:
     image_alt: Optional[str]
     image_title: Optional[str]
 
+    def answer_str(self):
+        if not self.answer:
+            return ""
+        elif isinstance(self.answer, str):
+            return self.answer
+        else:
+            return self.answer['content']
+
+
     
 
 def question_answer_factory(question: str, answer: dict):
@@ -70,7 +79,16 @@ Answer: {render_answer(q.answer)}
         return html
     
     def answers_str(self) -> str:
-        return "\n\n".join([q.answer['content'] if 'content' in q.answer else q.anwer for q in self.questions])
+        try:
+            res = ""
+            for q in self.questions:
+                if q.answer:
+                    res += q.answer['content'] if 'content' in q.answer else q.anwer
+                res += "\n\n"
+            return res    
+        except:
+            logger.exception("Could not convert answers.")
+            return ""
 
 
 def render_answer(answer: Union[str, dict]) -> str:
