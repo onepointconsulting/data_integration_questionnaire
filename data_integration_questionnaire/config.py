@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 
 from langchain.chat_models import ChatOpenAI
+from langchain.embeddings.openai import OpenAIEmbeddings
 
 load_dotenv()
 
@@ -45,6 +46,12 @@ class Config:
     use_tasklist = os.getenv("TASKLIST") == "true"
     knowledge_base_path = Path(os.getenv("KNOWLEDGE_BASE_PATH"))
     show_chain_of_thought = os.getenv("SHOW_CHAIN_OF_THOUGHT") == 'true'
+
+    # Embedding related
+    raw_text_folder = Path(os.getenv("RAW_TEXT_FOLDER"))
+    embeddings_persistence_dir = Path(os.getenv("EMBEDDINGS_PERSISTENCE_DIR"))
+    chunk_size = int(os.getenv("EMBEDDINGS_CHUNK_SIZE"))
+    embeddings = OpenAIEmbeddings(chunk_size=chunk_size)
 
 cfg = Config()
 
