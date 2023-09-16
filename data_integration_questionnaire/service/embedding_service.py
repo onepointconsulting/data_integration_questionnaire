@@ -9,6 +9,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 
 from data_integration_questionnaire.log_init import logger
+from data_integration_questionnaire.config import cfg
 import numpy as np
 
 
