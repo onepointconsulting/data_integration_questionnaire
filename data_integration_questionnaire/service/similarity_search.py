@@ -24,7 +24,7 @@ def init_vector_search() -> FAISS:
         doc_location = cfg.raw_text_folder
         logger.info(f"Using doc location {doc_location}.")
         logger.info("Generating vectors")
-        documents = load_text(doc_location=doc_location)
+        documents = load_text(path=doc_location)
         docsearch = generate_embeddings(
             documents=documents, persist_directory=embedding_dir
         )
