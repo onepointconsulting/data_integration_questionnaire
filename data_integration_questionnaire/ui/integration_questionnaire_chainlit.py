@@ -2,6 +2,8 @@ import re
 
 import chainlit as cl
 
+from asyncer import asyncify
+
 from data_integration_questionnaire.config import cfg
 from data_integration_questionnaire.model.questionnaire import (
     QuestionAnswer,
@@ -164,7 +166,7 @@ The graphic below may help with your response — it captures some of the most c
     callbacks = (
         [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
     )
-    bp = similarity_search(
+    bp = await asyncify(similarity_search)(
         docsearch,
         merged_questions.answers_str(),
         how_many=cfg.search_results_how_many * 3,
@@ -270,7 +272,7 @@ async def generate_execute_primary_questions(
     loop_question_data: LoopQuestionData,
 ) -> Questionnaire:
     first_qa = loop_question_data.questionnaire.questions[0]
-    search_res = similarity_search(docsearch, first_qa.answer_str())
+    search_res = await asyncify(similarity_search)(docsearch, first_qa.answer_str())
     input = prepare_initial_question(
         first_qa.question,
         first_qa.answer,
@@ -329,7 +331,7 @@ async def generate_execute_secondary_questions(
     callbacks = (
         [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
     )
-    bp = similarity_search(
+    bp = await asyncify(similarity_search)(
         docsearch,
         loop_question_data.questionnaire.answers_str(),
         how_many=cfg.search_results_how_many * 2,
