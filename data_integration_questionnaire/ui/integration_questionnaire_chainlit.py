@@ -1,5 +1,4 @@
 import re
-from typing import List, Optional
 
 import chainlit as cl
 
@@ -37,35 +36,32 @@ from data_integration_questionnaire.service.flexible_quizz_service import (
     prepare_questions_parameters,
 )
 
-from data_integration_questionnaire.service.html_generator import generate_pdf_from
-from data_integration_questionnaire.service.mail_sender import (
-    send_email,
-    validate_address,
-)
 from data_integration_questionnaire.log_init import logger
 
-from asyncer import asyncify
-from data_integration_questionnaire.service.similarity_search import init_vector_search, similarity_search
+from data_integration_questionnaire.service.similarity_search import (
+    init_vector_search,
+    similarity_search,
+)
 from data_integration_questionnaire.service.tagging_service import (
     sentiment_chain_factory,
 )
+from data_integration_questionnaire.ui.advice_processor import display_advices
 from data_integration_questionnaire.ui.chat_settings_factory import (
     INITIAL_QUESTION,
     NUMBER_OF_BATCHES,
     QUESTION_PER_BATCH,
     create_chat_settings,
 )
+from data_integration_questionnaire.ui.constants import AVATAR, TOOL_NAME
 from data_integration_questionnaire.ui.customized_chainlit_callback import (
     OnepointAsyncLangchainCallbackHandler,
 )
+from data_integration_questionnaire.ui.mail_processor import process_send_email
 from data_integration_questionnaire.ui.model import LoopQuestionData
-
-
-
-AVATAR = {"CHATBOT": "Chatbot", "USER": "User"}
-TOOL_NAME = "Data & Analytics Self-Assessment"
+from data_integration_questionnaire.ui.pdf_processor import generate_display_pdf
 
 docsearch = init_vector_search()
+
 
 def display_image(image_path: str, alt: str, title: str):
     return f'![{alt}](/public/images/{image_path} "{title}")'
@@ -142,6 +138,7 @@ The graphic below may help with your response — it captures some of the most c
         initial_question
     ] = initial_message_enhanced
     await loop_questions(initial_loop_question_data)
+    # Process initial question which is pre-defined
     merged_questions: Questionnaire = await generate_execute_primary_questions(
         LoopQuestionData(
             message="",
@@ -164,9 +161,16 @@ The graphic below may help with your response — it captures some of the most c
 
     # Produce advices
     advisor_chain = chain_factory_advisor()
-    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    callbacks = (
+        [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    )
+    bp = similarity_search(
+        docsearch,
+        merged_questions.answers_str(),
+        how_many=cfg.search_results_how_many * 3,
+    )
     advices: BestPracticesAdvices = await advisor_chain.arun(
-        prepare_questions_parameters(merged_questions, False),
+        prepare_questions_parameters(merged_questions, False, bp=bp),
         callbacks=callbacks,
     )
 
@@ -221,8 +225,11 @@ async def loop_questions(loop_question_data: LoopQuestionData):
             content=loop_question_data.message, author=AVATAR["CHATBOT"]
         ).send()
     for i, question_answer in enumerate(loop_question_data.questionnaire.questions):
-        logger.info('loop_question_data.enhanced_question_map: %s', loop_question_data.enhanced_question_map)
-        logger.info('question_answer.question: %s', question_answer.question)
+        logger.info(
+            "loop_question_data.enhanced_question_map: %s",
+            loop_question_data.enhanced_question_map,
+        )
+        logger.info("question_answer.question: %s", question_answer.question)
         if question_answer.question in loop_question_data.enhanced_question_map:
             message = loop_question_data.enhanced_question_map[question_answer.question]
         else:
@@ -268,11 +275,13 @@ async def generate_execute_primary_questions(
         first_qa.question,
         first_qa.answer,
         loop_question_data.question_per_batch,
-        best_practices=search_res
+        best_practices=search_res,
     )
     initial_chain = chain_factory_initial_question()
     await cl.Message(content="").send()
-    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    callbacks = (
+        [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    )
     initial_best_practices_questions: BestPracticesQuestions = await initial_chain.arun(
         input, callbacks=callbacks
     )
@@ -293,7 +302,9 @@ async def generate_execute_primary_questions(
 async def check_has_questions(loop_question_data: LoopQuestionData, answer_str: str):
     sentiment_chain = sentiment_chain_factory()
     logger.info("answer_str: %s", answer_str)
-    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    callbacks = (
+        [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    )
     response_tags: ResponseTags = await sentiment_chain.arun(
         {"answer": answer_str}, callbacks=callbacks
     )
@@ -315,12 +326,20 @@ async def generate_execute_secondary_questions(
 ) -> Questionnaire:
     secondary_chain = chain_factory_secondary_questions()
     await cl.Message(content="").send()
-    callbacks = [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    callbacks = (
+        [OnepointAsyncLangchainCallbackHandler()] if cfg.show_chain_of_thought else []
+    )
+    bp = similarity_search(
+        docsearch,
+        loop_question_data.questionnaire.answers_str(),
+        how_many=cfg.search_results_how_many * 2,
+    )
     secondary_questions: BestPracticesQuestions = await secondary_chain.arun(
         prepare_questions_parameters(
             questionnaire=loop_question_data.questionnaire,
             questions_per_batch=loop_question_data.question_per_batch,
             include_questions_per_batch=True,
+            bp=bp,
         ),
         callbacks=callbacks,
     )
@@ -339,65 +358,6 @@ async def generate_execute_secondary_questions(
     await loop_questions(loop_question_data)
     return best_practices_secondary_questionnaire
 
-
-async def generate_display_pdf(advices, merged_questionnaire):
-    pdf_path = await asyncify(generate_pdf_from)(merged_questionnaire, advices)
-    logger.info("PDF path: %s", pdf_path)
-    elements = [
-        cl.File(
-            name=pdf_path.name,
-            path=pdf_path.as_posix(),
-            display="inline",
-        ),
-    ]
-    await cl.Message(
-        content="Please download the advices in the pdf!", elements=elements
-    ).send()
-
-
-async def display_advices(advices: BestPracticesAdvices) -> Optional[str]:
-    plain_advices = advices.get_advices()
-    advice_amount = len(plain_advices)
-    if advice_amount > 0:
-        pieces = "piece" if advice_amount == 1 else "pieces"
-        await cl.Message(
-            content=f"You have {advice_amount} {pieces} of advice.",
-            author=AVATAR["CHATBOT"],
-        ).send()
-        advice_markdown = "\n- ".join(plain_advices)
-
-        actions = []
-        if cfg.use_tasklist:
-            task_list: cl.TaskList = await create_task_list(plain_advices)
-            cl.user_session.set("task_list", task_list)
-            actions: List[cl.Action] = create_advice_task_actions(plain_advices)
-        await cl.Message(
-            content="\n- " + advice_markdown, author=AVATAR["CHATBOT"], actions=actions
-        ).send()
-        return advice_markdown
-    else:
-        await cl.Message(
-            content="You are doing great. We have no advice for you right now.",
-            author=AVATAR["CHATBOT"],
-        ).send()
-        return None
-
-    # await process_classification(questionnaire, quizz_input, advice_markdown)
-
-
-def create_advice_task_actions(advices: List[str]) -> List[cl.Action]:
-    # Sending an action button within a chatbot message
-    actions = []
-    for i, advice in enumerate(advices):
-        actions.append(
-            cl.Action(
-                name="task_button",
-                label=f"Advice {i + 1}",
-                value=advice,
-                description=advice[:50],
-            )
-        )
-    return actions
 
 
 @cl.action_callback("task_button")
@@ -423,63 +383,6 @@ async def process_classification(questionnaire, quizz_input, advice_markdown):
     ).send()
     await process_send_email(questionnaire, advice_markdown)
 
-
-async def create_task_list(advices: List[str]) -> cl.TaskList:
-    task_list = cl.TaskList()
-    task_list.status = "Running..."
-
-    for advice in advices:
-        task = cl.Task(title=advice, status=cl.TaskStatus.READY)
-        await task_list.add_task(task)
-
-    # Update the task list in the interface
-    await task_list.send()
-    return task_list
-
-
-async def process_send_email(
-    questionnaire: Questionnaire, advices: BestPracticesAdvices
-):
-    response = await cl.AskUserMessage(
-        content="Would you like to receive an email with the recommendations? If so please write your email in the chat.",
-        timeout=cfg.ui_timeout,
-        author=AVATAR["CHATBOT"],
-    ).send()
-    if "content" in response:
-        response_content = response["content"]
-        if validate_address(response_content):
-            logger.info("Sending email to %s", response_content)
-            await asyncify(send_email)(
-                "Dear customer",
-                response_content,
-                "Onepoint Data Integration Questionnaire",
-                f"""
-    <p>Big thank you for completing the <b>Onepoint's Data Integration Assessment Quiz</b>.</p>
-
-    <h2>Questionnaire</h2>
-    {questionnaire.to_html()}
-
-    <h2>Advice</h2>
-    {advices.to_html()}
-
-    For more information, please visit our <a href="https://onepointltd.com">webpage</a>.
-
-    """,
-            )
-            await cl.Message(
-                content=f"Thank you for submitting the query. We really appreciate that you have taken time to do this.",
-                author=AVATAR["CHATBOT"],
-            ).send()
-        else:
-            logger.warn("%s is not a valid email", response_content)
-            await cl.ErrorMessage(
-                content=f"Sorry, '{response_content}' does not seem to be an email address",
-                author=AVATAR["CHATBOT"],
-            ).send()
-    await cl.Message(
-        content=f"The questionnaire is complete. Please press the 'New Chat' button to restart.",
-        author=AVATAR["CHATBOT"],
-    ).send()
 
 
 def log_questionnaire(merged_questions: Questionnaire):

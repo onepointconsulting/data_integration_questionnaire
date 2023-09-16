@@ -152,9 +152,10 @@ def prepare_questions_parameters(
     questionnaire: Questionnaire,
     questions_per_batch: int = prompts["general_settings"]["questions_per_batch"],
     include_questions_per_batch=True,
+    bp=best_practices
 ) -> dict:
     config = {
-        "best_practices": best_practices,
+        "best_practices": bp,
         "knowledge_base": knowledge_base,
         "questions_answers": str(questionnaire),
         "answers": questionnaire.answers_str()

@@ -31,9 +31,9 @@ def init_vector_search() -> FAISS:
         return docsearch
     
 
-def similarity_search(docsearch: FAISS, input: str) -> str:
-    how_many = cfg.search_results_how_many
+def similarity_search(docsearch: FAISS, input: str, how_many=cfg.search_results_how_many) -> str:
     doc_list = docsearch.similarity_search(input, k=how_many)
+    logger.info("Similarity search results: %s", len(doc_list))
     return "\n\n".join([p.page_content for p in doc_list])
     
 

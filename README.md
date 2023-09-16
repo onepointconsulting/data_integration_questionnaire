@@ -7,6 +7,7 @@ This is a reverse chatbot that asks the users questions about data integration p
 We suggest to use [Conda](https://docs.conda.io/en/latest/) to manage the virtual environment and then install poetry.
 
 ```
+conda activate base
 conda remove -n data_integration_questionnaire --all
 conda create -n data_integration_questionnaire python=3.11
 conda activate data_integration_questionnaire
@@ -32,20 +33,22 @@ chainlit run ./data_integration_questionnaire/ui/integration_questionnaire_chain
 OPENAI_API_KEY=<open_ai_key>
 # OPENAI_MODEL=gpt-3.5-turbo-0613
 OPENAI_MODEL=gpt-4-0613
-REQUEST_TIMEOUT=120
+# OPENAI_MODEL=gpt-4-32k-0613
+REQUEST_TIMEOUT=140
 
 VERBOSE_LLM=true
 LANGCHAIN_CACHE=false
 
-UI_TIMEOUT = 1200
+UI_TIMEOUT = 2400
 
 # Email related
-MAIL_FROM_PERSON=<name of person>
-MAIL_USER=<email sender>
-MAIL_PASSWORD=<Gmail app password or password>
-MAIL_FROM=<email sender>
-MAIL_SERVER=<smtp mail server, like smtp.gmail.com:587>
+MAIL_FROM_PERSON=Gil Fernandes
+MAIL_USER=gil.fernandes@onepointltd.com
+MAIL_PASSWORD=jvjeudtliwwmqqlk
+MAIL_FROM=gil.fernandes@onepointltd.com
+MAIL_SERVER=smtp.gmail.com:587
 
+# General stuff
 PROJECT_ROOT=C:/development/playground/langchain/data_integration_questionnaire
 QUESTION_CACHE_FOLDER=c:/tmp/data_integration_questionnaire/cache
 
@@ -53,5 +56,20 @@ QUESTION_CACHE_FOLDER=c:/tmp/data_integration_questionnaire/cache
 WKHTMLTOPDF_BINARY=C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe
 TEMPLATE_LOCATION=C:/development/playground/langchain/data_integration_questionnaire/templates
 PDF_FOLDER=C:/tmp/data_integration_questionnaire/pdfs
+
+# Whether to show the task list or not
+TASKLIST=false
+
+# The knowledge base path
+KNOWLEDGE_BASE_PATH=C:/development/playground/langchain/data_integration_questionnaire/docs/knowledge_base.txt
+
+# UI
+SHOW_CHAIN_OF_THOUGHT=true
+
+# Embedding related
+RAW_TEXT_FOLDER=C:\development\playground\langchain\data_integration_questionnaire\docs\raw_text
+EMBEDDINGS_PERSISTENCE_DIR=C:\development\playground\langchain\data_integration_questionnaire\embeddings
+EMBEDDINGS_CHUNK_SIZE=2500
+SEARCH_RESULTS_HOW_MANY=4
 
 ```
